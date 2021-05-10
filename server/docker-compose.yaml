@@ -1,0 +1,11 @@
+version: '3.4'
+services:
+  app:
+    expose:
+        - "8080"
+    ports:
+        - 8080:8080
+    build:
+      context: .
+      dockerfile: Dockerfile
+    working_dir: /app
