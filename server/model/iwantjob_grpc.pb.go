@@ -21,6 +21,7 @@ type DbClient interface {
 	GetList(ctx context.Context, in *GetListReq, opts ...grpc.CallOption) (*List, error)
 	CreateCube(ctx context.Context, in *CreateCubeReq, opts ...grpc.CallOption) (*Cube, error)
 	UploadImage(ctx context.Context, in *UploadImageReq, opts ...grpc.CallOption) (*ImageResp, error)
+	StreamList(ctx context.Context, in *GetListReq, opts ...grpc.CallOption) (Db_StreamListClient, error)
 }
 
 type dbClient struct {
@@ -58,6 +59,38 @@ func (c *dbClient) UploadImage(ctx context.Context, in *UploadImageReq, opts ...
 	return out, nil
 }
 
+func (c *dbClient) StreamList(ctx context.Context, in *GetListReq, opts ...grpc.CallOption) (Db_StreamListClient, error) {
+	stream, err := c.cc.NewStream(ctx, &Db_ServiceDesc.Streams[0], "/model.Db/StreamList", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &dbStreamListClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type Db_StreamListClient interface {
+	Recv() (*List, error)
+	grpc.ClientStream
+}
+
+type dbStreamListClient struct {
+	grpc.ClientStream
+}
+
+func (x *dbStreamListClient) Recv() (*List, error) {
+	m := new(List)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 // DbServer is the server API for Db service.
 // All implementations must embed UnimplementedDbServer
 // for forward compatibility
@@ -65,6 +98,7 @@ type DbServer interface {
 	GetList(context.Context, *GetListReq) (*List, error)
 	CreateCube(context.Context, *CreateCubeReq) (*Cube, error)
 	UploadImage(context.Context, *UploadImageReq) (*ImageResp, error)
+	StreamList(*GetListReq, Db_StreamListServer) error
 	// mustEmbedUnimplementedDbServer()
 }
 
@@ -80,6 +114,9 @@ func (UnimplementedDbServer) CreateCube(context.Context, *CreateCubeReq) (*Cube,
 }
 func (UnimplementedDbServer) UploadImage(context.Context, *UploadImageReq) (*ImageResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UploadImage not implemented")
+}
+func (UnimplementedDbServer) StreamList(*GetListReq, Db_StreamListServer) error {
+	return status.Errorf(codes.Unimplemented, "method StreamList not implemented")
 }
 func (UnimplementedDbServer) mustEmbedUnimplementedDbServer() {}
 
@@ -148,6 +185,27 @@ func _Db_UploadImage_Handler(srv interface{}, ctx context.Context, dec func(inte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Db_StreamList_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(GetListReq)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(DbServer).StreamList(m, &dbStreamListServer{stream})
+}
+
+type Db_StreamListServer interface {
+	Send(*List) error
+	grpc.ServerStream
+}
+
+type dbStreamListServer struct {
+	grpc.ServerStream
+}
+
+func (x *dbStreamListServer) Send(m *List) error {
+	return x.ServerStream.SendMsg(m)
+}
+
 // Db_ServiceDesc is the grpc.ServiceDesc for Db service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -166,6 +224,170 @@ var Db_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UploadImage",
 			Handler:    _Db_UploadImage_Handler,
+		},
+	},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "StreamList",
+			Handler:       _Db_StreamList_Handler,
+			ServerStreams: true,
+		},
+	},
+	Metadata: "proto/iwantjob.proto",
+}
+
+// AuthServiceClient is the client API for AuthService service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+type AuthServiceClient interface {
+	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error)
+	SingUp(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error)
+	Refresh(ctx context.Context, in *RefreshReq, opts ...grpc.CallOption) (*LoginResponse, error)
+}
+
+type authServiceClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewAuthServiceClient(cc grpc.ClientConnInterface) AuthServiceClient {
+	return &authServiceClient{cc}
+}
+
+func (c *authServiceClient) Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error) {
+	out := new(LoginResponse)
+	err := c.cc.Invoke(ctx, "/model.AuthService/Login", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authServiceClient) SingUp(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error) {
+	out := new(LoginResponse)
+	err := c.cc.Invoke(ctx, "/model.AuthService/SingUp", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authServiceClient) Refresh(ctx context.Context, in *RefreshReq, opts ...grpc.CallOption) (*LoginResponse, error) {
+	out := new(LoginResponse)
+	err := c.cc.Invoke(ctx, "/model.AuthService/Refresh", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// AuthServiceServer is the server API for AuthService service.
+// All implementations must embed UnimplementedAuthServiceServer
+// for forward compatibility
+type AuthServiceServer interface {
+	Login(context.Context, *LoginRequest) (*LoginResponse, error)
+	SingUp(context.Context, *LoginRequest) (*LoginResponse, error)
+	Refresh(context.Context, *RefreshReq) (*LoginResponse, error)
+	// mustEmbedUnimplementedAuthServiceServer()
+}
+
+// UnimplementedAuthServiceServer must be embedded to have forward compatible implementations.
+type UnimplementedAuthServiceServer struct {
+}
+
+func (UnimplementedAuthServiceServer) Login(context.Context, *LoginRequest) (*LoginResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Login not implemented")
+}
+func (UnimplementedAuthServiceServer) SingUp(context.Context, *LoginRequest) (*LoginResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SingUp not implemented")
+}
+func (UnimplementedAuthServiceServer) Refresh(context.Context, *RefreshReq) (*LoginResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Refresh not implemented")
+}
+func (UnimplementedAuthServiceServer) mustEmbedUnimplementedAuthServiceServer() {}
+
+// UnsafeAuthServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to AuthServiceServer will
+// result in compilation errors.
+type UnsafeAuthServiceServer interface {
+	mustEmbedUnimplementedAuthServiceServer()
+}
+
+func RegisterAuthServiceServer(s grpc.ServiceRegistrar, srv AuthServiceServer) {
+	s.RegisterService(&AuthService_ServiceDesc, srv)
+}
+
+func _AuthService_Login_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LoginRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).Login(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/model.AuthService/Login",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).Login(ctx, req.(*LoginRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthService_SingUp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LoginRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).SingUp(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/model.AuthService/SingUp",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).SingUp(ctx, req.(*LoginRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthService_Refresh_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RefreshReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).Refresh(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/model.AuthService/Refresh",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).Refresh(ctx, req.(*RefreshReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// AuthService_ServiceDesc is the grpc.ServiceDesc for AuthService service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var AuthService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "model.AuthService",
+	HandlerType: (*AuthServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "Login",
+			Handler:    _AuthService_Login_Handler,
+		},
+		{
+			MethodName: "SingUp",
+			Handler:    _AuthService_SingUp_Handler,
+		},
+		{
+			MethodName: "Refresh",
+			Handler:    _AuthService_Refresh_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

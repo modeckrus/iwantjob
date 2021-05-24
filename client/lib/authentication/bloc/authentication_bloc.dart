@@ -1,9 +1,10 @@
 import 'dart:async';
 
-import 'package:authentication_repository/authentication_repository.dart';
+import 'package:client/service/user_repository/user_repository.dart';
+
+import '../../service/authentication_repository/authentication_repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:user_repository/user_repository.dart';
 
 part 'authentication_event.dart';
 part 'authentication_state.dart';
@@ -17,6 +18,7 @@ class AuthenticationBloc
         _userRepository = userRepository,
         super(const AuthenticationState.unknown()) {
     _authenticationStatusSubscription = _authenticationRepository.status.listen(
+
       (status) => add(AuthenticationStatusChanged(status)),
     );
   }
@@ -34,6 +36,7 @@ class AuthenticationBloc
       final User? user = await _userRepository.cachedUser();
       if (user != null) {
         _authenticationRepository.setStatus(AuthenticationStatus.authenticated);
+        // return;
         // yield AuthenticationState.authenticated(user);
       } else {
         _authenticationRepository.setStatus(AuthenticationStatus.unauthenticated);

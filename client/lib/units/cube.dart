@@ -55,4 +55,9 @@ class Cube {
       source ?? this.source,
     );
   }
+
+  @override
+  String toString() {
+    return 'Cube(fid: $fid, uid: $uid, url: $url, type: $type, source: $source)';
+  }
 }

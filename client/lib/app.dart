@@ -1,8 +1,12 @@
-import 'package:authentication_repository/authentication_repository.dart';
+import 'dart:async';
+
+import 'package:client/navigatorkey.dart';
+import 'package:client/service/error/cubit/error_cubit.dart';
+
+import '../service/authentication_repository/authentication_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:user_repository/user_repository.dart';
 
 import 'authentication/bloc/authentication_bloc.dart';
 import 'dark_theme.dart';
@@ -11,15 +15,16 @@ import 'localization/localization.dart';
 import 'login/login.dart';
 import 'pages/home.dart';
 import 'route_generator.dart';
+import 'service/user_repository/user_repository.dart';
 
 class MyApp extends StatefulWidget {
   final AuthenticationRepository authenticationRepository;
   final UserRepository userRepository;
-
   const MyApp(
       {Key? key,
       required this.authenticationRepository,
-      required this.userRepository})
+      required this.userRepository,
+      })
       : super(key: key);
   @override
   _MyAppState createState() => _MyAppState();
@@ -31,10 +36,14 @@ class _MyAppState extends State<MyApp> {
     return RepositoryProvider.value(
       value: widget.authenticationRepository,
       child: BlocProvider(
-        create: (context) => AuthenticationBloc(
-            authenticationRepository: widget.authenticationRepository,
-            userRepository: widget.userRepository)..add(AuthenticationAppStart()),
-        child: MyAppView(),
+        create: (context) => ErrorCubit(),
+        child: BlocProvider(
+          create: (context) => AuthenticationBloc(
+              authenticationRepository: widget.authenticationRepository,
+              userRepository: widget.userRepository)
+            ..add(AuthenticationAppStart()),
+          child: MyAppView(),
+        ),
       ),
     );
   }
@@ -46,29 +55,37 @@ class MyAppView extends StatefulWidget {
 }
 
 class _MyAppViewState extends State<MyAppView> {
-  final _navigatorKey = GlobalKey<NavigatorState>();
+  GlobalKey<NavigatorState>? _navigatorKey = NavigatorKey.navKey;
 
-  NavigatorState get _navigator => _navigatorKey.currentState!;
+  NavigatorState? get _navigator => _navigatorKey?.currentState;
+  @override
+  void initState() {
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return BlocListener<AuthenticationBloc, AuthenticationState>(
       listener: (context, state) {
         switch (state.status) {
-              case AuthenticationStatus.authenticated:
-                _navigator.pushAndRemoveUntil<void>(
-                  HomePage.route(),
-                  (route) => false,
-                );
-                break;
-              case AuthenticationStatus.unauthenticated:
-                _navigator.pushAndRemoveUntil<void>(
-                  LoginPage.route(),
-                  (route) => false,
-                );
-                break;
-              default:
-                break;
-            }
+          case AuthenticationStatus.authenticated:
+          // Navigator.of(context).pushAndRemoveUntil(HomePage.route(),
+          //     (route) => false,);
+            _navigator?.pushAndRemoveUntil<void>(
+              HomePage.route(),
+              (route) => false,
+            );
+            break;
+          case AuthenticationStatus.unauthenticated:
+            // Navigator.of(context).pushAndRemoveUntil(LoginPage.route(),
+            //   (route) => false,);
+            _navigator?.pushAndRemoveUntil<void>(
+              LoginPage.route(),
+              (route) => false,
+            );
+            break;
+          default:
+            break;
+        }
       },
       child: MaterialApp(
         navigatorKey: _navigatorKey,

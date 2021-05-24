@@ -40,7 +40,11 @@ class _CubeWidgetState extends State<CubeWidget> {
               child: Image.network(
                 cube.url,
                 errorBuilder: (context, exception, stacktrace) =>
-                    ErrorWidget(exception),
+                    SizedBox(
+                      width: double.infinity,
+                      height: 200,
+                      child: ErrorWidget(exception),
+                    ),
                 fit: BoxFit.contain,
               ),
             ),

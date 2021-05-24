@@ -1,45 +1,88 @@
+import 'package:get_it/get_it.dart';
+import 'package:grpc/grpc_connection_interface.dart';
+import 'package:grpc/service_api.dart';
+
 import '/proto/iwantjob.pbgrpc.dart';
 import '/service/db.dart';
 import '/service/grpc_service.dart';
 import '../units/cube.dart' as u;
+import 'auth.dart';
+import 'error_service.dart';
 
-class DBGrpc extends Db{
+class DBGrpc extends Db {
   @override
   Future<u.Cube?> createCube(createCubeReq req) async {
-      final client = GRPCService().client;
-      final resp = await DbClient(client).createCube(req);
-      
-      return u.Cube.map(
+    try{
+    final client = GRPCService().client;
+    final options = Map<String, String>();
+    options['authorization'] = GetIt.I.get<Auth>().user.token;
+    final resp = await DbClient(client)
+        .createCube(req, options: CallOptions(metadata: options));
+
+    return u.Cube.map(
         fid: resp.fid,
         uid: resp.uid,
         url: resp.url,
         type: resp.type,
-        source: resp.source
-      );
+        source: resp.source);
+    }catch(e){
+      ErrorService().AddString(e.toString());
     }
-  
-    @override
-    Future<List<u.Cube>?> getList(getListReq req) async {
-      final client = GRPCService().client;
-      final r = await DbClient(client).getList(req);
-      List<u.Cube> cubes = List.filled(r.samples.length, u.Cube.map(fid: 'fid', uid: 'uid', url: 'url', type: 'type', source: 'source'));
-      for (var i = 0; i < r.samples.length; i++) {
-        final resp = r.samples[i];
-        cubes[i] = (u.Cube.map(
-        fid: resp.fid,
-        uid: resp.uid,
-        url: resp.url,
-        type: resp.type,
-        source: resp.source
-      ));
+  }
+
+  Future<List<u.Cube>?> getListO(getListReq req) async {
+    try{
+    final client = GRPCService().client;
+    final options = Map<String, String>();
+    options['authorization'] = GetIt.I.get<Auth>().user.token;
+    final r = await DbClient(client)
+        .getList(req, options: CallOptions(metadata: options));
+    List<u.Cube> cubes = List.filled(
+        r.samples.length,
+        u.Cube.map(
+            fid: 'fid',
+            uid: 'uid',
+            url: 'url',
+            type: 'type',
+            source: 'source'));
+    for (var i = 0; i < r.samples.length; i++) {
+      final resp = r.samples[i];
+      cubes[i] = (u.Cube.map(
+          fid: resp.fid,
+          uid: resp.uid,
+          url: resp.url,
+          type: resp.type,
+          source: resp.source));
+    }
+    return cubes;
+    }catch(e){
+      ErrorService().AddString(e.toString());
+    }
+  }
+
+  @override
+  Future<List<u.Cube>?> getList(getListReq req) async {
+    try {
+      return getListO(req);
+    } catch (e) {
+      if (e is GrpcError) {
+        if (e.code == 3000) {
+          print("token expired");
+          await GetIt.I.get<Auth>().refresh();
+          return getListO(req);
+        } else {
+          ErrorService().AddString(e.toString());
+        }
+      } else {
+        ErrorService().AddString(e.toString());
       }
-      return cubes;
+      print(e);
     }
-  
-    @override
-    Future<String?> uploadImage(UploadImageReq req) {
+  }
+
+  @override
+  Future<String?> uploadImage(UploadImageReq req) {
     // TODO: implement uploadImage
     throw UnimplementedError();
   }
-
 }

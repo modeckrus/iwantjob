@@ -1,3 +1,7 @@
+import 'dart:async';
+
+import 'package:client/localization/localization.dart';
+import 'package:client/service/error_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -22,7 +26,9 @@ class _HomeViewState extends State<HomeView> {
 
   void load() async {
     try {
-      final ncubes = await GetIt.I.get<Db>().getList(getListReq(first: first, offset: offset));
+      final ncubes = await GetIt.I
+          .get<Db>()
+          .getList(getListReq(first: first, offset: offset));
       if (ncubes != null) {
         if (mounted) {
           setState(() {
@@ -42,7 +48,6 @@ class _HomeViewState extends State<HomeView> {
   }
 
   ScrollController scrollController = ScrollController();
-
   @override
   void initState() {
     super.initState();
@@ -61,20 +66,48 @@ class _HomeViewState extends State<HomeView> {
         ? ErrorWidget(error)
         : !loaded
             ? Center(
-                child: CircularProgressIndicator(),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: [
+                      MaterialButton(onPressed: (){
+                        load();
+                      },
+                      child: Text(AppLocalizations.of(context).reload),
+                      ),
+                      CircularProgressIndicator(),
+                    ],
+                  ),
+                ),
               )
             : Container(
-                // child: 
+                // child:
                 // CupertinoScrollbar(
                 //   controller: scrollController,
-                  child: ListView.builder(
-                    
-                      controller: scrollController,
-                      itemCount: cubes.length,
-                      itemBuilder: (context, index) {
-                        final cube = cubes[index];
-                        return CubeWidget(cube: cube);
-                      }),
+                child: RefreshIndicator(
+                    onRefresh: () async {
+                      load();
+                    },
+                    child: cubes.length == 0
+                        ? Container(
+                          alignment: Alignment.center,
+                          child: MaterialButton(
+                              onPressed: () {
+                                load();
+                              },
+                              child: Padding(
+                                padding: EdgeInsets.all(10),
+                                child: Text('Refresh'),
+                              ),
+                            ),
+                        )
+                        : ListView.builder(
+                            controller: scrollController,
+                            itemCount: cubes.length,
+                            itemBuilder: (context, index) {
+                              final cube = cubes[index];
+                              return CubeWidget(cube: cube);
+                            })),
                 // ),
               );
   }

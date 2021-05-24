@@ -9,3 +9,10 @@ services:
       context: .
       dockerfile: Dockerfile
     working_dir: /app
+    depends_on:
+      - 'mongo'
+  mongo:
+      image: 'mongo:latest'
+      container_name: 'mongo'
+      ports:
+        - '27100:27017'

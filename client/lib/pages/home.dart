@@ -1,5 +1,8 @@
+import 'package:client/service/auth.dart';
+import 'package:client/service/error/cubit/error_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 
 import '/localization/localization.dart';
 import '../authentication/bloc/authentication_bloc.dart';
@@ -40,13 +43,15 @@ class _HomePageState extends State<HomePage> {
         title: Text(AppLocalizations.of(context).home),
         actions: [
           IconButton(
-              onPressed: () {
-                DialogService.addImage(context);
+              onPressed: () async {
+                final cube = await DialogService.addCube(context);
+                print(cube);
               },
               icon: Icon(Icons.add)),
           IconButton(
               onPressed: () {
-                BlocProvider.of<AuthenticationBloc>(context).add(AuthenticationLogoutRequested());
+                BlocProvider.of<AuthenticationBloc>(context)
+                    .add(AuthenticationLogoutRequested());
               },
               icon: Icon(Icons.logout)),
           IconButton(
@@ -54,9 +59,22 @@ class _HomePageState extends State<HomePage> {
                 Navigator.pushNamed(context, '/test');
               },
               icon: Icon(Icons.text_snippet)),
+          IconButton(
+              onPressed: () {
+                GetIt.I.get<Auth>().refresh();
+              },
+              icon: Icon(Icons.refresh)),
         ],
       ),
-      body: HomeView(),
+      body: BlocListener<ErrorCubit, ErrorState>(
+        listener: (context, state) {
+          if (state is ErrorHasState) {
+            ScaffoldMessenger.of(context)
+                .showSnackBar(SnackBar(content: Text(state.error.toString())));
+          }
+        },
+        child: HomeView(),
+      ),
     );
   }
 }

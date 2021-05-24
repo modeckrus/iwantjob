@@ -1,3 +1,4 @@
+import 'package:client/service/error_service.dart';
 import 'package:grpc/grpc.dart';
 class GRPCService{
   late  ClientChannel client;
@@ -8,13 +9,18 @@ class GRPCService{
 
 
   GRPCService._internal() {
-    client = ClientChannel("127.0.0.1", // Your IP here, localhost might not work.
+    try {
+      client = ClientChannel("127.0.0.1", // Your IP here, localhost might not work.
         port: 9000,
         options: ChannelOptions(
           //TODO: Change to secure with server certificates
           credentials: ChannelCredentials.insecure(),
           idleTimeout: Duration(minutes: 1),
         ));
+    } catch (e) {
+      ErrorService().AddString(e.toString());
+    }
+    
   }
 
 }

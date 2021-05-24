@@ -24,6 +24,15 @@ class AppLocalizations {
   String get console{
     return Intl.message('Console', name:'console');
   }
+  String get reload{
+    return Intl.message('Reload', name:'Reload');
+  }
+  String get addCube{
+    return Intl.message('Add cube', name: 'addCube');
+  }
+  String get mediatype{
+    return Intl.message('mediaType', name:'mediatype');
+  }
   String get imageUrl{
     return Intl.message('Image Url', name: 'imageUrl');
   }

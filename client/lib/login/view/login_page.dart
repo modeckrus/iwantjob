@@ -1,4 +1,6 @@
-import 'package:authentication_repository/authentication_repository.dart';
+import 'package:client/service/error/cubit/error_cubit.dart';
+
+import '../../service/authentication_repository/authentication_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -22,7 +24,14 @@ class LoginPage extends StatelessWidget {
                   RepositoryProvider.of<AuthenticationRepository>(context),
             );
           },
-          child: LoginForm(),
+          child: BlocListener<ErrorCubit, ErrorState>(
+            listener: (context, state) {
+              if(state is ErrorHasState){
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.error.toString())));
+              }
+            },
+            child: LoginForm(),
+          ),
         ),
       ),
     );

@@ -23,7 +23,7 @@ class DialogService {
         context: context,
         builder: (context) {
           return Dialog(
-            child: Column(),
+            child: AddCubeWidget()
           );
         });
   }
