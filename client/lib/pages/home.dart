@@ -1,6 +1,7 @@
 import 'package:client/service/auth.dart';
 import 'package:client/service/error/cubit/error_cubit.dart';
 import 'package:client/widgets/cube_view.dart';
+import 'package:client/widgets/cubes/cubes_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
@@ -39,42 +40,48 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(AppLocalizations.of(context).home),
-        actions: [
-          IconButton(
-              onPressed: () async {
-                final cube = await DialogService.addCube(context);
-                print(cube);
-              },
-              icon: Icon(Icons.add)),
-          IconButton(
-              onPressed: () {
-                BlocProvider.of<AuthenticationBloc>(context)
-                    .add(AuthenticationLogoutRequested());
-              },
-              icon: Icon(Icons.logout)),
-          IconButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/test');
-              },
-              icon: Icon(Icons.text_snippet)),
-          IconButton(
-              onPressed: () {
-                GetIt.I.get<Auth>().refresh();
-              },
-              icon: Icon(Icons.refresh)),
-        ],
-      ),
-      body: BlocListener<ErrorCubit, ErrorState>(
-        listener: (context, state) {
-          if (state is ErrorHasState) {
-            ScaffoldMessenger.of(context)
-                .showSnackBar(SnackBar(content: Text(state.error.toString())));
-          }
-        },
-        child: CubeView(),
+    return BlocProvider(
+      create: (context) => CubesBloc(),
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(AppLocalizations.of(context).home),
+          actions: [
+            IconButton(
+                onPressed: () async {
+                  final cube = await DialogService.addCube(context);
+                  print(cube);
+                },
+                icon: Icon(Icons.add)),
+            IconButton(
+                onPressed: () {
+                  BlocProvider.of<AuthenticationBloc>(context)
+                      .add(AuthenticationLogoutRequested());
+                },
+                icon: Icon(Icons.logout)),
+            IconButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, '/test');
+                },
+                icon: Icon(Icons.text_snippet)),
+            Builder(builder: (context) {
+              return IconButton(
+                  onPressed: () {
+                    GetIt.I.get<Auth>().refresh();
+                    BlocProvider.of<CubesBloc>(context).add(CubesRefresh());
+                  },
+                  icon: Icon(Icons.refresh));
+            }),
+          ],
+        ),
+        body: BlocListener<ErrorCubit, ErrorState>(
+          listener: (context, state) {
+            if (state is ErrorHasState) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(state.error.toString())));
+            }
+          },
+          child: CubeView(),
+        ),
       ),
     );
   }

@@ -12,22 +12,20 @@ class CubeView extends StatefulWidget {
 class _CubeViewState extends State<CubeView> {
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => CubesBloc(),
-      child: BlocBuilder<CubesBloc, CubesState>(
-        builder: (context, state) {
-          if(state is CubesS){
-            final cubes = state.cubes;
-            return ListView.builder(
+    return BlocBuilder<CubesBloc, CubesState>(
+      builder: (context, state) {
+        if (state is CubesS) {
+          final cubes = state.cubes;
+
+          return ListView.builder(
               itemCount: cubes.length,
-              itemBuilder: (context, index){
-              final cube = cubes[index];
-              return CubeWidget(cube: cube);
-            });
-          }
-          return Container();
-        },
-      ),
+              itemBuilder: (context, index) {
+                final cube = cubes[index];
+                return CubeWidget(cube: cube);
+              });
+        }
+        return Container();
+      },
     );
   }
 }
