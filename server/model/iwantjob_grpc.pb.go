@@ -75,7 +75,7 @@ func (c *dbClient) StreamList(ctx context.Context, in *GetListReq, opts ...grpc.
 }
 
 type Db_StreamListClient interface {
-	Recv() (*List, error)
+	Recv() (*CubeStream, error)
 	grpc.ClientStream
 }
 
@@ -83,8 +83,8 @@ type dbStreamListClient struct {
 	grpc.ClientStream
 }
 
-func (x *dbStreamListClient) Recv() (*List, error) {
-	m := new(List)
+func (x *dbStreamListClient) Recv() (*CubeStream, error) {
+	m := new(CubeStream)
 	if err := x.ClientStream.RecvMsg(m); err != nil {
 		return nil, err
 	}
@@ -194,7 +194,7 @@ func _Db_StreamList_Handler(srv interface{}, stream grpc.ServerStream) error {
 }
 
 type Db_StreamListServer interface {
-	Send(*List) error
+	Send(*CubeStream) error
 	grpc.ServerStream
 }
 
@@ -202,7 +202,7 @@ type dbStreamListServer struct {
 	grpc.ServerStream
 }
 
-func (x *dbStreamListServer) Send(m *List) error {
+func (x *dbStreamListServer) Send(m *CubeStream) error {
 	return x.ServerStream.SendMsg(m)
 }
 

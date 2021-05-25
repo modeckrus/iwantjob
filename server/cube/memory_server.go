@@ -35,7 +35,7 @@ func (Server) GetList(ctx context.Context, in *model.GetListReq) (*model.List, e
 func (Server) CreateCube(ctx context.Context, in *model.CreateCubeReq) (*model.Cube, error) {
 	cube := &model.Cube{
 		Id:     strconv.Itoa(len(cubes)),
-		Uid:    in.Uid,
+		Fid:    in.Fid,
 		Url:    in.Url,
 		Type:   in.Type,
 		Source: in.Source,
@@ -55,7 +55,7 @@ func (Server) UploadImage(ctx context.Context, in *model.UploadImageReq) (*model
 func randomCube() *model.Cube {
 	return &model.Cube{
 		Fid:    "0x1",
-		Uid:    "0x2",
+		Id:     "0x2",
 		Url:    "https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fbestanimations.com%2FHumans%2FSexy%2Fsexy-hot-girl-animated-gif-52.gif&f=1&nofb=1",
 		Type:   ".gif",
 		Source: "https://duckduckgo.com/?q=gif&atb=v249-1&ia=images&iax=images",

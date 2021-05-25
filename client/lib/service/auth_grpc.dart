@@ -1,4 +1,4 @@
-import 'package:client/proto/proto/iwantjob.pbgrpc.dart';
+import 'package:client/proto/iwantjob.pbgrpc.dart';
 import 'package:client/service/auth.dart';
 import 'package:client/service/error_service.dart';
 import 'package:client/units/user_claims.dart';
@@ -6,7 +6,7 @@ import 'package:get_it/get_it.dart';
 import 'package:hive/hive.dart';
 
 import 'grpc_service.dart';
-import 'user_repository/models/user.dart';
+import '../units/user.dart';
 
 class AuthGrpc extends Auth {
   DateTime expires = DateTime.now();

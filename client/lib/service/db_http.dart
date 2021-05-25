@@ -1,6 +1,7 @@
 import '/proto/iwantjob.pb.dart';
 
 import '../units/cube.dart' as u;
+import '../units/cube_stream.dart' as u;
 import 'db.dart';
 
 class DbHttp extends Db{
@@ -21,4 +22,11 @@ class DbHttp extends Db{
     // TODO: implement uploadImage
     throw UnimplementedError();
   }
+
+  @override
+  Stream<u.CubeStream>? streamList() {
+    // TODO: implement streamList
+    throw UnimplementedError();
+  }
+
 }

@@ -2,7 +2,6 @@ package cube
 
 import (
 	"context"
-	"fmt"
 	"iwantjob/server/model"
 	"log"
 	"strconv"
@@ -61,7 +60,7 @@ func (s *MongoServer) GetList(ctx context.Context, in *model.GetListReq) (*model
 func (s *MongoServer) CreateCube(ctx context.Context, in *model.CreateCubeReq) (*model.Cube, error) {
 	cube := &model.Cube{
 		Id:     strconv.Itoa(len(cubes)),
-		Uid:    in.Uid,
+		Fid:    in.Fid,
 		Url:    in.Url,
 		Type:   in.Type,
 		Source: in.Source,
@@ -84,14 +83,54 @@ func (s *MongoServer) UploadImage(ctx context.Context, in *model.UploadImageReq)
 
 func (s *MongoServer) StreamList(req *model.GetListReq, stream model.Db_StreamListServer) error {
 	ctx := stream.Context()
-	ctx, cancel := context.WithTimeout(ctx, time.Second*30)
-	defer cancel()
+	deadline, ok := stream.Context().Deadline()
 	coll := s.Client.Database("cubes").Collection("cubes")
-	matchStage := bson.D{{"$match", bson.D{{"operationType", "insert"}}}}
-	opts := options.ChangeStream().SetMaxAwaitTime(2 * time.Second)
-	changeStream, err := coll.Watch(ctx, mongo.Pipeline{matchStage}, opts)
+	// matchStage := bson.D{{"$match", bson.D{{"operationType", "insert"}}}}
+	opts := options.ChangeStream().SetFullDocument("updateLookup")
+	if ok {
+		log.Println("MaxAwaitTime: ", deadline.Sub(time.Now()))
+		opts.SetMaxAwaitTime(deadline.Sub(time.Now()))
+	}
+
+	changeStream, err := coll.Watch(ctx, mongo.Pipeline{}, opts)
+
 	for changeStream.Next(ctx) {
-		fmt.Println(changeStream.Current)
+		opTypeRaw := changeStream.Current.Lookup("operationType")
+		opType, ok := opTypeRaw.StringValueOK()
+		if opType == "delete" {
+			log.Println("DeleteOperation")
+			log.Println(changeStream.Current)
+			oid := changeStream.Current.Lookup("documentKey")
+			type WithId struct {
+				Id primitive.ObjectID `bson:"_id,omitempty"`
+			}
+			withId := WithId{}
+			err := oid.Unmarshal(&withId)
+			if err != nil {
+				log.Println(err)
+				continue
+			}
+			if ok {
+				stream.Send(&model.CubeStream{
+					Otype: opType,
+					Id:    withId.Id.Hex(),
+				})
+			}
+		} else {
+			fullDocument := changeStream.Current.Lookup("fullDocument")
+			cube := MongoCube{}
+			err := fullDocument.Unmarshal(&cube)
+			if err != nil {
+				continue
+			}
+			if ok {
+				result := cube.toCubeStream(opType)
+				log.Println(result)
+				stream.Send(result)
+			} else {
+				log.Println("Optype not ok")
+			}
+		}
 	}
 	// log.Printf("%#v\n", cubes)
 	// claims := ctx.Value("claims")

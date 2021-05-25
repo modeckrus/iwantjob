@@ -118,7 +118,7 @@ func AddAdmin(client *mongo.Client) error {
 }
 
 func main() {
-	client, err := InitMongoDb("mongodb://localhost:27017")
+	client, err := InitMongoDb("mongodb://localhost:27017/?readPreference=primary&ssl=false&connect=direct")
 	if err != nil {
 		log.Fatal(err)
 	}

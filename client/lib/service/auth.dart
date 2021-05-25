@@ -1,5 +1,5 @@
 import '../units/user_claims.dart';
-import 'user_repository/models/user.dart';
+import '../units/user.dart';
 
 abstract class Auth{
   User user = User.empty;

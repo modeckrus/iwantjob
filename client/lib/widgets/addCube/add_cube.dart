@@ -15,17 +15,17 @@ class AddCubeWidget extends StatefulWidget {
 }
 
 class _AddCubeWidgetState extends State<AddCubeWidget> {
-  TextEditingController urlController = TextEditingController();
-  TextEditingController sourceController = TextEditingController();
+  TextEditingController urlController = TextEditingController(text: 'https://i.picsum.photos/id/986/536/354.jpg?hmac=rPmVFe3q6X6hHAiFXMofwKnnRxW635iqMRFuBm_L9Oo');
+  TextEditingController sourceController = TextEditingController(text: 'https://i.picsum.photos/id/986/536/354.jpg?hmac=rPmVFe3q6X6hHAiFXMofwKnnRxW635iqMRFuBm_L9Oo');
   TextEditingController typeController = TextEditingController(text: '.jpg');
   @override
   void initState() {
     cube = u.Cube.map(
         fid: GetIt.I.get<User>().id,
-        source: '',
-        uid: '',
+        source: 'https://i.picsum.photos/id/986/536/354.jpg?hmac=rPmVFe3q6X6hHAiFXMofwKnnRxW635iqMRFuBm_L9Oo',
+        id: '',
         url:
-            'https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fbestanimations.com%2FHumans%2FSexy%2Fsexy-hot-girl-animated-gif-52.gif&f=1&nofb=1',
+            'https://i.picsum.photos/id/986/536/354.jpg?hmac=rPmVFe3q6X6hHAiFXMofwKnnRxW635iqMRFuBm_L9Oo',
         type: '.jpg');
     super.initState();
     urlController.addListener(() {
@@ -102,7 +102,6 @@ class _AddCubeWidgetState extends State<AddCubeWidget> {
                   onPressed: () async {
                     final cube = await GetIt.I.get<Db>().createCube(createCubeReq(
                         fid: GetIt.I.get<User>().id,
-                        uid: '',
                         source: sourceController.text,
                         url: urlController.text,
                         type: typeController.text));

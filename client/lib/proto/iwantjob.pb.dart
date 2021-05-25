@@ -9,6 +9,189 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
+class LoginRequest extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'LoginRequest', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'model'), createEmptyInstance: create)
+    ..aOS(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'username')
+    ..aOS(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'password')
+    ..hasRequiredFields = false
+  ;
+
+  LoginRequest._() : super();
+  factory LoginRequest({
+    $core.String? username,
+    $core.String? password,
+  }) {
+    final _result = create();
+    if (username != null) {
+      _result.username = username;
+    }
+    if (password != null) {
+      _result.password = password;
+    }
+    return _result;
+  }
+  factory LoginRequest.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory LoginRequest.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  LoginRequest clone() => LoginRequest()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  LoginRequest copyWith(void Function(LoginRequest) updates) => super.copyWith((message) => updates(message as LoginRequest)) as LoginRequest; // ignore: deprecated_member_use
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static LoginRequest create() => LoginRequest._();
+  LoginRequest createEmptyInstance() => create();
+  static $pb.PbList<LoginRequest> createRepeated() => $pb.PbList<LoginRequest>();
+  @$core.pragma('dart2js:noInline')
+  static LoginRequest getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<LoginRequest>(create);
+  static LoginRequest? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get username => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set username($core.String v) { $_setString(0, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasUsername() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearUsername() => clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get password => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set password($core.String v) { $_setString(1, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasPassword() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearPassword() => clearField(2);
+}
+
+class LoginResponse extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'LoginResponse', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'model'), createEmptyInstance: create)
+    ..aOS(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'accessToken')
+    ..aOS(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'refreshToken')
+    ..aOS(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'id')
+    ..hasRequiredFields = false
+  ;
+
+  LoginResponse._() : super();
+  factory LoginResponse({
+    $core.String? accessToken,
+    $core.String? refreshToken,
+    $core.String? id,
+  }) {
+    final _result = create();
+    if (accessToken != null) {
+      _result.accessToken = accessToken;
+    }
+    if (refreshToken != null) {
+      _result.refreshToken = refreshToken;
+    }
+    if (id != null) {
+      _result.id = id;
+    }
+    return _result;
+  }
+  factory LoginResponse.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory LoginResponse.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  LoginResponse clone() => LoginResponse()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  LoginResponse copyWith(void Function(LoginResponse) updates) => super.copyWith((message) => updates(message as LoginResponse)) as LoginResponse; // ignore: deprecated_member_use
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static LoginResponse create() => LoginResponse._();
+  LoginResponse createEmptyInstance() => create();
+  static $pb.PbList<LoginResponse> createRepeated() => $pb.PbList<LoginResponse>();
+  @$core.pragma('dart2js:noInline')
+  static LoginResponse getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<LoginResponse>(create);
+  static LoginResponse? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get accessToken => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set accessToken($core.String v) { $_setString(0, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasAccessToken() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearAccessToken() => clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get refreshToken => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set refreshToken($core.String v) { $_setString(1, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasRefreshToken() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearRefreshToken() => clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get id => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set id($core.String v) { $_setString(2, v); }
+  @$pb.TagNumber(3)
+  $core.bool hasId() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearId() => clearField(3);
+}
+
+class RefreshReq extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'RefreshReq', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'model'), createEmptyInstance: create)
+    ..aOS(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'refreshToken')
+    ..hasRequiredFields = false
+  ;
+
+  RefreshReq._() : super();
+  factory RefreshReq({
+    $core.String? refreshToken,
+  }) {
+    final _result = create();
+    if (refreshToken != null) {
+      _result.refreshToken = refreshToken;
+    }
+    return _result;
+  }
+  factory RefreshReq.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory RefreshReq.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  RefreshReq clone() => RefreshReq()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  RefreshReq copyWith(void Function(RefreshReq) updates) => super.copyWith((message) => updates(message as RefreshReq)) as RefreshReq; // ignore: deprecated_member_use
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static RefreshReq create() => RefreshReq._();
+  RefreshReq createEmptyInstance() => create();
+  static $pb.PbList<RefreshReq> createRepeated() => $pb.PbList<RefreshReq>();
+  @$core.pragma('dart2js:noInline')
+  static RefreshReq getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<RefreshReq>(create);
+  static RefreshReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get refreshToken => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set refreshToken($core.String v) { $_setString(0, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasRefreshToken() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearRefreshToken() => clearField(1);
+}
+
 class ImageResp extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'ImageResp', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'model'), createEmptyInstance: create)
     ..aOS(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'url')
@@ -158,10 +341,126 @@ class List_ extends $pb.GeneratedMessage {
   $core.List<Cube> get samples => $_getList(0);
 }
 
+class CubeStream extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'CubeStream', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'model'), createEmptyInstance: create)
+    ..aOS(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'fid')
+    ..aOS(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'url')
+    ..aOS(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'type')
+    ..aOS(5, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'source')
+    ..aOS(6, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'id')
+    ..aOS(7, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'otype')
+    ..hasRequiredFields = false
+  ;
+
+  CubeStream._() : super();
+  factory CubeStream({
+    $core.String? fid,
+    $core.String? url,
+    $core.String? type,
+    $core.String? source,
+    $core.String? id,
+    $core.String? otype,
+  }) {
+    final _result = create();
+    if (fid != null) {
+      _result.fid = fid;
+    }
+    if (url != null) {
+      _result.url = url;
+    }
+    if (type != null) {
+      _result.type = type;
+    }
+    if (source != null) {
+      _result.source = source;
+    }
+    if (id != null) {
+      _result.id = id;
+    }
+    if (otype != null) {
+      _result.otype = otype;
+    }
+    return _result;
+  }
+  factory CubeStream.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory CubeStream.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  CubeStream clone() => CubeStream()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  CubeStream copyWith(void Function(CubeStream) updates) => super.copyWith((message) => updates(message as CubeStream)) as CubeStream; // ignore: deprecated_member_use
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static CubeStream create() => CubeStream._();
+  CubeStream createEmptyInstance() => create();
+  static $pb.PbList<CubeStream> createRepeated() => $pb.PbList<CubeStream>();
+  @$core.pragma('dart2js:noInline')
+  static CubeStream getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<CubeStream>(create);
+  static CubeStream? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get fid => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set fid($core.String v) { $_setString(0, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasFid() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearFid() => clearField(1);
+
+  @$pb.TagNumber(3)
+  $core.String get url => $_getSZ(1);
+  @$pb.TagNumber(3)
+  set url($core.String v) { $_setString(1, v); }
+  @$pb.TagNumber(3)
+  $core.bool hasUrl() => $_has(1);
+  @$pb.TagNumber(3)
+  void clearUrl() => clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.String get type => $_getSZ(2);
+  @$pb.TagNumber(4)
+  set type($core.String v) { $_setString(2, v); }
+  @$pb.TagNumber(4)
+  $core.bool hasType() => $_has(2);
+  @$pb.TagNumber(4)
+  void clearType() => clearField(4);
+
+  @$pb.TagNumber(5)
+  $core.String get source => $_getSZ(3);
+  @$pb.TagNumber(5)
+  set source($core.String v) { $_setString(3, v); }
+  @$pb.TagNumber(5)
+  $core.bool hasSource() => $_has(3);
+  @$pb.TagNumber(5)
+  void clearSource() => clearField(5);
+
+  @$pb.TagNumber(6)
+  $core.String get id => $_getSZ(4);
+  @$pb.TagNumber(6)
+  set id($core.String v) { $_setString(4, v); }
+  @$pb.TagNumber(6)
+  $core.bool hasId() => $_has(4);
+  @$pb.TagNumber(6)
+  void clearId() => clearField(6);
+
+  @$pb.TagNumber(7)
+  $core.String get otype => $_getSZ(5);
+  @$pb.TagNumber(7)
+  set otype($core.String v) { $_setString(5, v); }
+  @$pb.TagNumber(7)
+  $core.bool hasOtype() => $_has(5);
+  @$pb.TagNumber(7)
+  void clearOtype() => clearField(7);
+}
+
 class Cube extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'Cube', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'model'), createEmptyInstance: create)
     ..aOS(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'fid')
-    ..aOS(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'uid')
     ..aOS(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'url')
     ..aOS(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'type')
     ..aOS(5, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'source')
@@ -172,7 +471,6 @@ class Cube extends $pb.GeneratedMessage {
   Cube._() : super();
   factory Cube({
     $core.String? fid,
-    $core.String? uid,
     $core.String? url,
     $core.String? type,
     $core.String? source,
@@ -181,9 +479,6 @@ class Cube extends $pb.GeneratedMessage {
     final _result = create();
     if (fid != null) {
       _result.fid = fid;
-    }
-    if (uid != null) {
-      _result.uid = uid;
     }
     if (url != null) {
       _result.url = url;
@@ -229,48 +524,39 @@ class Cube extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   void clearFid() => clearField(1);
 
-  @$pb.TagNumber(2)
-  $core.String get uid => $_getSZ(1);
-  @$pb.TagNumber(2)
-  set uid($core.String v) { $_setString(1, v); }
-  @$pb.TagNumber(2)
-  $core.bool hasUid() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearUid() => clearField(2);
-
   @$pb.TagNumber(3)
-  $core.String get url => $_getSZ(2);
+  $core.String get url => $_getSZ(1);
   @$pb.TagNumber(3)
-  set url($core.String v) { $_setString(2, v); }
+  set url($core.String v) { $_setString(1, v); }
   @$pb.TagNumber(3)
-  $core.bool hasUrl() => $_has(2);
+  $core.bool hasUrl() => $_has(1);
   @$pb.TagNumber(3)
   void clearUrl() => clearField(3);
 
   @$pb.TagNumber(4)
-  $core.String get type => $_getSZ(3);
+  $core.String get type => $_getSZ(2);
   @$pb.TagNumber(4)
-  set type($core.String v) { $_setString(3, v); }
+  set type($core.String v) { $_setString(2, v); }
   @$pb.TagNumber(4)
-  $core.bool hasType() => $_has(3);
+  $core.bool hasType() => $_has(2);
   @$pb.TagNumber(4)
   void clearType() => clearField(4);
 
   @$pb.TagNumber(5)
-  $core.String get source => $_getSZ(4);
+  $core.String get source => $_getSZ(3);
   @$pb.TagNumber(5)
-  set source($core.String v) { $_setString(4, v); }
+  set source($core.String v) { $_setString(3, v); }
   @$pb.TagNumber(5)
-  $core.bool hasSource() => $_has(4);
+  $core.bool hasSource() => $_has(3);
   @$pb.TagNumber(5)
   void clearSource() => clearField(5);
 
   @$pb.TagNumber(6)
-  $core.String get id => $_getSZ(5);
+  $core.String get id => $_getSZ(4);
   @$pb.TagNumber(6)
-  set id($core.String v) { $_setString(5, v); }
+  set id($core.String v) { $_setString(4, v); }
   @$pb.TagNumber(6)
-  $core.bool hasId() => $_has(5);
+  $core.bool hasId() => $_has(4);
   @$pb.TagNumber(6)
   void clearId() => clearField(6);
 }
@@ -278,7 +564,6 @@ class Cube extends $pb.GeneratedMessage {
 class createCubeReq extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'createCubeReq', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'model'), createEmptyInstance: create)
     ..aOS(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'fid')
-    ..aOS(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'uid')
     ..aOS(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'url')
     ..aOS(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'type')
     ..aOS(5, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'source')
@@ -288,7 +573,6 @@ class createCubeReq extends $pb.GeneratedMessage {
   createCubeReq._() : super();
   factory createCubeReq({
     $core.String? fid,
-    $core.String? uid,
     $core.String? url,
     $core.String? type,
     $core.String? source,
@@ -296,9 +580,6 @@ class createCubeReq extends $pb.GeneratedMessage {
     final _result = create();
     if (fid != null) {
       _result.fid = fid;
-    }
-    if (uid != null) {
-      _result.uid = uid;
     }
     if (url != null) {
       _result.url = url;
@@ -341,39 +622,30 @@ class createCubeReq extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   void clearFid() => clearField(1);
 
-  @$pb.TagNumber(2)
-  $core.String get uid => $_getSZ(1);
-  @$pb.TagNumber(2)
-  set uid($core.String v) { $_setString(1, v); }
-  @$pb.TagNumber(2)
-  $core.bool hasUid() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearUid() => clearField(2);
-
   @$pb.TagNumber(3)
-  $core.String get url => $_getSZ(2);
+  $core.String get url => $_getSZ(1);
   @$pb.TagNumber(3)
-  set url($core.String v) { $_setString(2, v); }
+  set url($core.String v) { $_setString(1, v); }
   @$pb.TagNumber(3)
-  $core.bool hasUrl() => $_has(2);
+  $core.bool hasUrl() => $_has(1);
   @$pb.TagNumber(3)
   void clearUrl() => clearField(3);
 
   @$pb.TagNumber(4)
-  $core.String get type => $_getSZ(3);
+  $core.String get type => $_getSZ(2);
   @$pb.TagNumber(4)
-  set type($core.String v) { $_setString(3, v); }
+  set type($core.String v) { $_setString(2, v); }
   @$pb.TagNumber(4)
-  $core.bool hasType() => $_has(3);
+  $core.bool hasType() => $_has(2);
   @$pb.TagNumber(4)
   void clearType() => clearField(4);
 
   @$pb.TagNumber(5)
-  $core.String get source => $_getSZ(4);
+  $core.String get source => $_getSZ(3);
   @$pb.TagNumber(5)
-  set source($core.String v) { $_setString(4, v); }
+  set source($core.String v) { $_setString(3, v); }
   @$pb.TagNumber(5)
-  $core.bool hasSource() => $_has(4);
+  $core.bool hasSource() => $_has(3);
   @$pb.TagNumber(5)
   void clearSource() => clearField(5);
 }

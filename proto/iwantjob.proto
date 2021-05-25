@@ -8,7 +8,7 @@ service Db{
     rpc GetList(getListReq) returns (List) {}
     rpc CreateCube(createCubeReq) returns (Cube) {}
     rpc UploadImage(UploadImageReq) returns (ImageResp) {}
-    rpc StreamList(getListReq) returns (stream List){}
+    rpc StreamList(getListReq) returns (stream CubeStream){}
 }
 
 message LoginRequest {
@@ -44,9 +44,17 @@ message List{
     repeated Cube samples = 1;
 }
 
+message CubeStream{
+    string fid = 1;
+    string url = 3;
+    string type = 4;
+    string source = 5;
+    string id = 6;
+    string otype = 7;
+}
+
 message Cube{
     string fid = 1;
-    string uid = 2;
     string url = 3;
     string type = 4;
     string source = 5;
@@ -55,7 +63,6 @@ message Cube{
 
 message createCubeReq{
     string fid = 1;
-    string uid = 2;
     string url = 3;
     string type = 4;
     string source = 5;

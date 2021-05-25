@@ -6,6 +6,7 @@ import '/proto/iwantjob.pbgrpc.dart';
 import '/service/db.dart';
 import '/service/grpc_service.dart';
 import '../units/cube.dart' as u;
+import '../units/cube_stream.dart' as u;
 import 'auth.dart';
 import 'error_service.dart';
 
@@ -21,7 +22,7 @@ class DBGrpc extends Db {
 
     return u.Cube.map(
         fid: resp.fid,
-        uid: resp.uid,
+        id: resp.id,
         url: resp.url,
         type: resp.type,
         source: resp.source);
@@ -41,7 +42,7 @@ class DBGrpc extends Db {
         r.samples.length,
         u.Cube.map(
             fid: 'fid',
-            uid: 'uid',
+            id: 'uid',
             url: 'url',
             type: 'type',
             source: 'source'));
@@ -49,7 +50,7 @@ class DBGrpc extends Db {
       final resp = r.samples[i];
       cubes[i] = (u.Cube.map(
           fid: resp.fid,
-          uid: resp.uid,
+          id: resp.id,
           url: resp.url,
           type: resp.type,
           source: resp.source));
@@ -84,5 +85,27 @@ class DBGrpc extends Db {
   Future<String?> uploadImage(UploadImageReq req) {
     // TODO: implement uploadImage
     throw UnimplementedError();
+  }
+
+  @override
+  Stream<u.CubeStream>? streamList() {
+    try {
+      final client = GRPCService().client;
+    final options = Map<String, String>();
+    options['authorization'] = GetIt.I.get<Auth>().user.token;
+    final r = DbClient(client).streamList(getListReq(first: 10, offset: 0));
+    return r.map((event) => u.CubeStream(event.fid, event.id, event.url, event.type, event.source, event.otype));
+    } catch (e) {
+      if (e is GrpcError) {
+        if (e.code == 3000) {
+          print("token expired");
+        } else {
+          ErrorService().AddString(e.toString());
+        }
+      } else {
+        ErrorService().AddString(e.toString());
+      }
+      print(e);
+    }
   }
 }

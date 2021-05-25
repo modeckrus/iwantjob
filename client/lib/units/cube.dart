@@ -1,17 +1,26 @@
 import 'dart:convert';
 
+import 'package:hive/hive.dart';
+
+
+@HiveType(typeId: 2)
 class Cube {
+  @HiveField(0)
   final String fid; //User id
-  final String uid; //Unique id of cube
+  @HiveField(1)
+  final String id; //Unique id of cube
+  @HiveField(2)
   final String url;
+  @HiveField(3)
   final String type;
+  @HiveField(4)
   final String source;
 
-  Cube(this.fid, this.uid, this.url, this.type, this.source); // Source
+  Cube(this.fid, this.id, this.url, this.type, this.source); // Source
 
   Cube.map(
       {required this.fid,
-      required this.uid,
+      required this.id,
       required this.url,
       required this.type,
       required this.source});
@@ -19,7 +28,7 @@ class Cube {
   Map<String, dynamic> toMap() {
     return {
       'fid': fid,
-      'uid': uid,
+      'uid': id,
       'url': url,
       'type': type,
       'source': source,
@@ -49,7 +58,7 @@ class Cube {
   }) {
     return Cube(
       fid ?? this.fid,
-      uid ?? this.uid,
+      uid ?? this.id,
       url ?? this.url,
       type ?? this.type,
       source ?? this.source,
@@ -58,6 +67,6 @@ class Cube {
 
   @override
   String toString() {
-    return 'Cube(fid: $fid, uid: $uid, url: $url, type: $type, source: $source)';
+    return 'Cube(fid: $fid, uid: $id, url: $url, type: $type, source: $source)';
   }
 }

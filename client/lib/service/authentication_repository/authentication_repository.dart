@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:client/service/auth.dart';
-import 'package:client/service/user_repository/models/user.dart';
+import 'package:client/units/user.dart';
 import 'package:client/service/user_repository/user_repository.dart';
 import 'package:get_it/get_it.dart';
 
