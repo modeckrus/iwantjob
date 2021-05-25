@@ -124,6 +124,147 @@ abstract class DbServiceBase extends $grpc.Service {
       $grpc.ServiceCall call, $0.getListReq request);
 }
 
+class MessagerClient extends $grpc.Client {
+  static final _$getMessages =
+      $grpc.ClientMethod<$0.getMessagesReq, $0.Messages>(
+          '/model.Messager/GetMessages',
+          ($0.getMessagesReq value) => value.writeToBuffer(),
+          ($core.List<$core.int> value) => $0.Messages.fromBuffer(value));
+  static final _$createMessage =
+      $grpc.ClientMethod<$0.createMessageReq, $0.Message>(
+          '/model.Messager/CreateMessage',
+          ($0.createMessageReq value) => value.writeToBuffer(),
+          ($core.List<$core.int> value) => $0.Message.fromBuffer(value));
+  static final _$updateMessage =
+      $grpc.ClientMethod<$0.updateMessageReq, $0.Message>(
+          '/model.Messager/UpdateMessage',
+          ($0.updateMessageReq value) => value.writeToBuffer(),
+          ($core.List<$core.int> value) => $0.Message.fromBuffer(value));
+  static final _$deleteMessage =
+      $grpc.ClientMethod<$0.deleteMessageReq, $0.DeletedMessage>(
+          '/model.Messager/DeleteMessage',
+          ($0.deleteMessageReq value) => value.writeToBuffer(),
+          ($core.List<$core.int> value) => $0.DeletedMessage.fromBuffer(value));
+  static final _$streamMessages =
+      $grpc.ClientMethod<$0.streamMessagesReq, $0.StreamedMessahge>(
+          '/model.Messager/StreamMessages',
+          ($0.streamMessagesReq value) => value.writeToBuffer(),
+          ($core.List<$core.int> value) =>
+              $0.StreamedMessahge.fromBuffer(value));
+
+  MessagerClient($grpc.ClientChannel channel,
+      {$grpc.CallOptions? options,
+      $core.Iterable<$grpc.ClientInterceptor>? interceptors})
+      : super(channel, options: options, interceptors: interceptors);
+
+  $grpc.ResponseFuture<$0.Messages> getMessages($0.getMessagesReq request,
+      {$grpc.CallOptions? options}) {
+    return $createUnaryCall(_$getMessages, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$0.Message> createMessage($0.createMessageReq request,
+      {$grpc.CallOptions? options}) {
+    return $createUnaryCall(_$createMessage, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$0.Message> updateMessage($0.updateMessageReq request,
+      {$grpc.CallOptions? options}) {
+    return $createUnaryCall(_$updateMessage, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$0.DeletedMessage> deleteMessage(
+      $0.deleteMessageReq request,
+      {$grpc.CallOptions? options}) {
+    return $createUnaryCall(_$deleteMessage, request, options: options);
+  }
+
+  $grpc.ResponseStream<$0.StreamedMessahge> streamMessages(
+      $0.streamMessagesReq request,
+      {$grpc.CallOptions? options}) {
+    return $createStreamingCall(
+        _$streamMessages, $async.Stream.fromIterable([request]),
+        options: options);
+  }
+}
+
+abstract class MessagerServiceBase extends $grpc.Service {
+  $core.String get $name => 'model.Messager';
+
+  MessagerServiceBase() {
+    $addMethod($grpc.ServiceMethod<$0.getMessagesReq, $0.Messages>(
+        'GetMessages',
+        getMessages_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.getMessagesReq.fromBuffer(value),
+        ($0.Messages value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.createMessageReq, $0.Message>(
+        'CreateMessage',
+        createMessage_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.createMessageReq.fromBuffer(value),
+        ($0.Message value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.updateMessageReq, $0.Message>(
+        'UpdateMessage',
+        updateMessage_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.updateMessageReq.fromBuffer(value),
+        ($0.Message value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.deleteMessageReq, $0.DeletedMessage>(
+        'DeleteMessage',
+        deleteMessage_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.deleteMessageReq.fromBuffer(value),
+        ($0.DeletedMessage value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.streamMessagesReq, $0.StreamedMessahge>(
+        'StreamMessages',
+        streamMessages_Pre,
+        false,
+        true,
+        ($core.List<$core.int> value) => $0.streamMessagesReq.fromBuffer(value),
+        ($0.StreamedMessahge value) => value.writeToBuffer()));
+  }
+
+  $async.Future<$0.Messages> getMessages_Pre(
+      $grpc.ServiceCall call, $async.Future<$0.getMessagesReq> request) async {
+    return getMessages(call, await request);
+  }
+
+  $async.Future<$0.Message> createMessage_Pre($grpc.ServiceCall call,
+      $async.Future<$0.createMessageReq> request) async {
+    return createMessage(call, await request);
+  }
+
+  $async.Future<$0.Message> updateMessage_Pre($grpc.ServiceCall call,
+      $async.Future<$0.updateMessageReq> request) async {
+    return updateMessage(call, await request);
+  }
+
+  $async.Future<$0.DeletedMessage> deleteMessage_Pre($grpc.ServiceCall call,
+      $async.Future<$0.deleteMessageReq> request) async {
+    return deleteMessage(call, await request);
+  }
+
+  $async.Stream<$0.StreamedMessahge> streamMessages_Pre($grpc.ServiceCall call,
+      $async.Future<$0.streamMessagesReq> request) async* {
+    yield* streamMessages(call, await request);
+  }
+
+  $async.Future<$0.Messages> getMessages(
+      $grpc.ServiceCall call, $0.getMessagesReq request);
+  $async.Future<$0.Message> createMessage(
+      $grpc.ServiceCall call, $0.createMessageReq request);
+  $async.Future<$0.Message> updateMessage(
+      $grpc.ServiceCall call, $0.updateMessageReq request);
+  $async.Future<$0.DeletedMessage> deleteMessage(
+      $grpc.ServiceCall call, $0.deleteMessageReq request);
+  $async.Stream<$0.StreamedMessahge> streamMessages(
+      $grpc.ServiceCall call, $0.streamMessagesReq request);
+}
+
 class AuthServiceClient extends $grpc.Client {
   static final _$login = $grpc.ClientMethod<$0.LoginRequest, $0.LoginResponse>(
       '/model.AuthService/Login',

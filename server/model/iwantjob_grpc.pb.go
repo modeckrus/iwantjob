@@ -236,6 +236,264 @@ var Db_ServiceDesc = grpc.ServiceDesc{
 	Metadata: "proto/iwantjob.proto",
 }
 
+// MessagerClient is the client API for Messager service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+type MessagerClient interface {
+	GetMessages(ctx context.Context, in *GetMessagesReq, opts ...grpc.CallOption) (*Messages, error)
+	CreateMessage(ctx context.Context, in *CreateMessageReq, opts ...grpc.CallOption) (*Message, error)
+	UpdateMessage(ctx context.Context, in *UpdateMessageReq, opts ...grpc.CallOption) (*Message, error)
+	DeleteMessage(ctx context.Context, in *DeleteMessageReq, opts ...grpc.CallOption) (*DeletedMessage, error)
+	StreamMessages(ctx context.Context, in *StreamMessagesReq, opts ...grpc.CallOption) (Messager_StreamMessagesClient, error)
+}
+
+type messagerClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewMessagerClient(cc grpc.ClientConnInterface) MessagerClient {
+	return &messagerClient{cc}
+}
+
+func (c *messagerClient) GetMessages(ctx context.Context, in *GetMessagesReq, opts ...grpc.CallOption) (*Messages, error) {
+	out := new(Messages)
+	err := c.cc.Invoke(ctx, "/model.Messager/GetMessages", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *messagerClient) CreateMessage(ctx context.Context, in *CreateMessageReq, opts ...grpc.CallOption) (*Message, error) {
+	out := new(Message)
+	err := c.cc.Invoke(ctx, "/model.Messager/CreateMessage", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *messagerClient) UpdateMessage(ctx context.Context, in *UpdateMessageReq, opts ...grpc.CallOption) (*Message, error) {
+	out := new(Message)
+	err := c.cc.Invoke(ctx, "/model.Messager/UpdateMessage", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *messagerClient) DeleteMessage(ctx context.Context, in *DeleteMessageReq, opts ...grpc.CallOption) (*DeletedMessage, error) {
+	out := new(DeletedMessage)
+	err := c.cc.Invoke(ctx, "/model.Messager/DeleteMessage", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *messagerClient) StreamMessages(ctx context.Context, in *StreamMessagesReq, opts ...grpc.CallOption) (Messager_StreamMessagesClient, error) {
+	stream, err := c.cc.NewStream(ctx, &Messager_ServiceDesc.Streams[0], "/model.Messager/StreamMessages", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &messagerStreamMessagesClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type Messager_StreamMessagesClient interface {
+	Recv() (*StreamedMessahge, error)
+	grpc.ClientStream
+}
+
+type messagerStreamMessagesClient struct {
+	grpc.ClientStream
+}
+
+func (x *messagerStreamMessagesClient) Recv() (*StreamedMessahge, error) {
+	m := new(StreamedMessahge)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+// MessagerServer is the server API for Messager service.
+// All implementations must embed UnimplementedMessagerServer
+// for forward compatibility
+type MessagerServer interface {
+	GetMessages(context.Context, *GetMessagesReq) (*Messages, error)
+	CreateMessage(context.Context, *CreateMessageReq) (*Message, error)
+	UpdateMessage(context.Context, *UpdateMessageReq) (*Message, error)
+	DeleteMessage(context.Context, *DeleteMessageReq) (*DeletedMessage, error)
+	StreamMessages(*StreamMessagesReq, Messager_StreamMessagesServer) error
+	// mustEmbedUnimplementedMessagerServer()
+}
+
+// UnimplementedMessagerServer must be embedded to have forward compatible implementations.
+type UnimplementedMessagerServer struct {
+}
+
+func (UnimplementedMessagerServer) GetMessages(context.Context, *GetMessagesReq) (*Messages, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetMessages not implemented")
+}
+func (UnimplementedMessagerServer) CreateMessage(context.Context, *CreateMessageReq) (*Message, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateMessage not implemented")
+}
+func (UnimplementedMessagerServer) UpdateMessage(context.Context, *UpdateMessageReq) (*Message, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateMessage not implemented")
+}
+func (UnimplementedMessagerServer) DeleteMessage(context.Context, *DeleteMessageReq) (*DeletedMessage, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteMessage not implemented")
+}
+func (UnimplementedMessagerServer) StreamMessages(*StreamMessagesReq, Messager_StreamMessagesServer) error {
+	return status.Errorf(codes.Unimplemented, "method StreamMessages not implemented")
+}
+func (UnimplementedMessagerServer) mustEmbedUnimplementedMessagerServer() {}
+
+// UnsafeMessagerServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to MessagerServer will
+// result in compilation errors.
+type UnsafeMessagerServer interface {
+	mustEmbedUnimplementedMessagerServer()
+}
+
+func RegisterMessagerServer(s grpc.ServiceRegistrar, srv MessagerServer) {
+	s.RegisterService(&Messager_ServiceDesc, srv)
+}
+
+func _Messager_GetMessages_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetMessagesReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MessagerServer).GetMessages(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/model.Messager/GetMessages",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MessagerServer).GetMessages(ctx, req.(*GetMessagesReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Messager_CreateMessage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateMessageReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MessagerServer).CreateMessage(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/model.Messager/CreateMessage",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MessagerServer).CreateMessage(ctx, req.(*CreateMessageReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Messager_UpdateMessage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateMessageReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MessagerServer).UpdateMessage(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/model.Messager/UpdateMessage",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MessagerServer).UpdateMessage(ctx, req.(*UpdateMessageReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Messager_DeleteMessage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteMessageReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MessagerServer).DeleteMessage(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/model.Messager/DeleteMessage",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MessagerServer).DeleteMessage(ctx, req.(*DeleteMessageReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Messager_StreamMessages_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(StreamMessagesReq)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(MessagerServer).StreamMessages(m, &messagerStreamMessagesServer{stream})
+}
+
+type Messager_StreamMessagesServer interface {
+	Send(*StreamedMessahge) error
+	grpc.ServerStream
+}
+
+type messagerStreamMessagesServer struct {
+	grpc.ServerStream
+}
+
+func (x *messagerStreamMessagesServer) Send(m *StreamedMessahge) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+// Messager_ServiceDesc is the grpc.ServiceDesc for Messager service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var Messager_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "model.Messager",
+	HandlerType: (*MessagerServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "GetMessages",
+			Handler:    _Messager_GetMessages_Handler,
+		},
+		{
+			MethodName: "CreateMessage",
+			Handler:    _Messager_CreateMessage_Handler,
+		},
+		{
+			MethodName: "UpdateMessage",
+			Handler:    _Messager_UpdateMessage_Handler,
+		},
+		{
+			MethodName: "DeleteMessage",
+			Handler:    _Messager_DeleteMessage_Handler,
+		},
+	},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "StreamMessages",
+			Handler:       _Messager_StreamMessages_Handler,
+			ServerStreams: true,
+		},
+	},
+	Metadata: "proto/iwantjob.proto",
+}
+
 // AuthServiceClient is the client API for AuthService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.

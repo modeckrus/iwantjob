@@ -11,6 +11,60 @@ service Db{
     rpc StreamList(getListReq) returns (stream CubeStream){}
 }
 
+service Messager{
+    rpc GetMessages(getMessagesReq) returns (Messages){}
+    rpc CreateMessage(createMessageReq) returns (Message){}
+    rpc UpdateMessage(updateMessageReq) returns (Message){}
+    rpc DeleteMessage(deleteMessageReq) returns (DeletedMessage) {}
+    rpc StreamMessages(streamMessagesReq) returns (stream StreamedMessahge){}
+}
+message DeletedMessage{
+    string id = 1;
+}
+message StreamedMessahge{
+    string fid = 1;//User id
+    string id = 2;
+    string text = 3;
+    string photo =4;
+    string opType = 5;
+    int64 createdAt = 6;
+}
+message Messages{
+    repeated Message messages = 1;
+}
+
+message Message{
+    string fid = 1;//User id
+    string id = 2;
+    string text = 3;
+    string photo =4;
+    int64 createdAt = 5;
+}
+
+message getMessagesReq{
+    int64 from = 1;
+    int32 first = 2;
+}
+
+message createMessageReq{
+    string text = 2;
+    string photo =3;
+}
+
+message updateMessageReq{
+    string id = 1;
+    string text = 2;
+    string photo =3;
+}
+
+message streamMessagesReq{
+    int64 from = 1;
+}
+
+message deleteMessageReq{
+    string id= 1;
+}
+
 message LoginRequest {
     string username = 1;
     string password = 2;

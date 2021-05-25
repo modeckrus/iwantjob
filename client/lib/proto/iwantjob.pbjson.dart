@@ -8,6 +8,109 @@
 import 'dart:core' as $core;
 import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
+@$core.Deprecated('Use deletedMessageDescriptor instead')
+const DeletedMessage$json = const {
+  '1': 'DeletedMessage',
+  '2': const [
+    const {'1': 'id', '3': 1, '4': 1, '5': 9, '10': 'id'},
+  ],
+};
+
+/// Descriptor for `DeletedMessage`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List deletedMessageDescriptor = $convert.base64Decode('Cg5EZWxldGVkTWVzc2FnZRIOCgJpZBgBIAEoCVICaWQ=');
+@$core.Deprecated('Use streamedMessahgeDescriptor instead')
+const StreamedMessahge$json = const {
+  '1': 'StreamedMessahge',
+  '2': const [
+    const {'1': 'fid', '3': 1, '4': 1, '5': 9, '10': 'fid'},
+    const {'1': 'id', '3': 2, '4': 1, '5': 9, '10': 'id'},
+    const {'1': 'text', '3': 3, '4': 1, '5': 9, '10': 'text'},
+    const {'1': 'photo', '3': 4, '4': 1, '5': 9, '10': 'photo'},
+    const {'1': 'opType', '3': 5, '4': 1, '5': 9, '10': 'opType'},
+    const {'1': 'createdAt', '3': 6, '4': 1, '5': 3, '10': 'createdAt'},
+  ],
+};
+
+/// Descriptor for `StreamedMessahge`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List streamedMessahgeDescriptor = $convert.base64Decode('ChBTdHJlYW1lZE1lc3NhaGdlEhAKA2ZpZBgBIAEoCVIDZmlkEg4KAmlkGAIgASgJUgJpZBISCgR0ZXh0GAMgASgJUgR0ZXh0EhQKBXBob3RvGAQgASgJUgVwaG90bxIWCgZvcFR5cGUYBSABKAlSBm9wVHlwZRIcCgljcmVhdGVkQXQYBiABKANSCWNyZWF0ZWRBdA==');
+@$core.Deprecated('Use messagesDescriptor instead')
+const Messages$json = const {
+  '1': 'Messages',
+  '2': const [
+    const {'1': 'messages', '3': 1, '4': 3, '5': 11, '6': '.model.Message', '10': 'messages'},
+  ],
+};
+
+/// Descriptor for `Messages`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List messagesDescriptor = $convert.base64Decode('CghNZXNzYWdlcxIqCghtZXNzYWdlcxgBIAMoCzIOLm1vZGVsLk1lc3NhZ2VSCG1lc3NhZ2Vz');
+@$core.Deprecated('Use messageDescriptor instead')
+const Message$json = const {
+  '1': 'Message',
+  '2': const [
+    const {'1': 'fid', '3': 1, '4': 1, '5': 9, '10': 'fid'},
+    const {'1': 'id', '3': 2, '4': 1, '5': 9, '10': 'id'},
+    const {'1': 'text', '3': 3, '4': 1, '5': 9, '10': 'text'},
+    const {'1': 'photo', '3': 4, '4': 1, '5': 9, '10': 'photo'},
+    const {'1': 'createdAt', '3': 5, '4': 1, '5': 3, '10': 'createdAt'},
+  ],
+};
+
+/// Descriptor for `Message`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List messageDescriptor = $convert.base64Decode('CgdNZXNzYWdlEhAKA2ZpZBgBIAEoCVIDZmlkEg4KAmlkGAIgASgJUgJpZBISCgR0ZXh0GAMgASgJUgR0ZXh0EhQKBXBob3RvGAQgASgJUgVwaG90bxIcCgljcmVhdGVkQXQYBSABKANSCWNyZWF0ZWRBdA==');
+@$core.Deprecated('Use getMessagesReqDescriptor instead')
+const getMessagesReq$json = const {
+  '1': 'getMessagesReq',
+  '2': const [
+    const {'1': 'from', '3': 1, '4': 1, '5': 3, '10': 'from'},
+    const {'1': 'first', '3': 2, '4': 1, '5': 5, '10': 'first'},
+  ],
+};
+
+/// Descriptor for `getMessagesReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List getMessagesReqDescriptor = $convert.base64Decode('Cg5nZXRNZXNzYWdlc1JlcRISCgRmcm9tGAEgASgDUgRmcm9tEhQKBWZpcnN0GAIgASgFUgVmaXJzdA==');
+@$core.Deprecated('Use createMessageReqDescriptor instead')
+const createMessageReq$json = const {
+  '1': 'createMessageReq',
+  '2': const [
+    const {'1': 'text', '3': 2, '4': 1, '5': 9, '10': 'text'},
+    const {'1': 'photo', '3': 3, '4': 1, '5': 9, '10': 'photo'},
+  ],
+};
+
+/// Descriptor for `createMessageReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List createMessageReqDescriptor = $convert.base64Decode('ChBjcmVhdGVNZXNzYWdlUmVxEhIKBHRleHQYAiABKAlSBHRleHQSFAoFcGhvdG8YAyABKAlSBXBob3Rv');
+@$core.Deprecated('Use updateMessageReqDescriptor instead')
+const updateMessageReq$json = const {
+  '1': 'updateMessageReq',
+  '2': const [
+    const {'1': 'id', '3': 1, '4': 1, '5': 9, '10': 'id'},
+    const {'1': 'text', '3': 2, '4': 1, '5': 9, '10': 'text'},
+    const {'1': 'photo', '3': 3, '4': 1, '5': 9, '10': 'photo'},
+  ],
+};
+
+/// Descriptor for `updateMessageReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List updateMessageReqDescriptor = $convert.base64Decode('ChB1cGRhdGVNZXNzYWdlUmVxEg4KAmlkGAEgASgJUgJpZBISCgR0ZXh0GAIgASgJUgR0ZXh0EhQKBXBob3RvGAMgASgJUgVwaG90bw==');
+@$core.Deprecated('Use streamMessagesReqDescriptor instead')
+const streamMessagesReq$json = const {
+  '1': 'streamMessagesReq',
+  '2': const [
+    const {'1': 'from', '3': 1, '4': 1, '5': 3, '10': 'from'},
+  ],
+};
+
+/// Descriptor for `streamMessagesReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List streamMessagesReqDescriptor = $convert.base64Decode('ChFzdHJlYW1NZXNzYWdlc1JlcRISCgRmcm9tGAEgASgDUgRmcm9t');
+@$core.Deprecated('Use deleteMessageReqDescriptor instead')
+const deleteMessageReq$json = const {
+  '1': 'deleteMessageReq',
+  '2': const [
+    const {'1': 'id', '3': 1, '4': 1, '5': 9, '10': 'id'},
+  ],
+};
+
+/// Descriptor for `deleteMessageReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List deleteMessageReqDescriptor = $convert.base64Decode('ChBkZWxldGVNZXNzYWdlUmVxEg4KAmlkGAEgASgJUgJpZA==');
 @$core.Deprecated('Use loginRequestDescriptor instead')
 const LoginRequest$json = const {
   '1': 'LoginRequest',

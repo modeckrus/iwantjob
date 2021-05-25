@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:client/service/auth.dart';
 import 'package:client/service/user_repository/user_repository.dart';
+import 'package:get_it/get_it.dart';
 
 import '../../service/authentication_repository/authentication_repository.dart';
 import 'package:bloc/bloc.dart';
@@ -33,7 +35,9 @@ class AuthenticationBloc
     AuthenticationEvent event,
   ) async* {
     if (event is AuthenticationAppStart) {
+      
       final User? user = await _userRepository.cachedUser();
+      await GetIt.I.get<Auth>().refresh();
       if (user != null) {
         _authenticationRepository.setStatus(AuthenticationStatus.authenticated);
         // return;

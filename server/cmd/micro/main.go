@@ -4,7 +4,8 @@ import (
 	"context"
 	"fmt"
 	"iwantjob/server/cube"
-	"iwantjob/server/grpcs"
+	"iwantjob/server/grpcs-auth"
+	"iwantjob/server/messager"
 	"iwantjob/server/mjwt"
 	"iwantjob/server/model"
 	"iwantjob/server/user"
@@ -58,9 +59,15 @@ func seedUsers(userStore user.UserStore) error {
 
 func accessibleRoles() map[string][]string {
 	const Dbservice = "/model.Db/"
+	const MessagerService = "/model.Messager/"
 	return map[string][]string{
-		Dbservice + "CreateCube": {"admin"},
-		Dbservice + "GetList":    {"admin", "user"},
+		Dbservice + "CreateCube":           {"admin"},
+		Dbservice + "GetList":              {"admin", "user"},
+		MessagerService + "CreateMessage":  {"admin", "user"},
+		MessagerService + "GetMessages":    {"admin", "user"},
+		MessagerService + "UpdateMessage":  {"admin", "user"},
+		MessagerService + "DeleteMessage":  {"admin", "user"},
+		MessagerService + "StreamMessages": {"admin", "user"},
 	}
 }
 
@@ -134,11 +141,15 @@ func main() {
 		grpc.StreamInterceptor(inceptor.Stream()),
 	)
 
-	srv := &cube.MongoServer{
+	dbMongo := &cube.MongoServer{
 		Client: client,
 	}
-	model.RegisterDbServer(s, srv)
+	messagerMongo := &messager.MessagerMongo{
+		Client: client,
+	}
+	model.RegisterDbServer(s, dbMongo)
 	model.RegisterAuthServiceServer(s, authServer)
+	model.RegisterMessagerServer(s, messagerMongo)
 	err = AddAdmin(client)
 	if err != nil {
 		log.Println("Error while add admin", err)
