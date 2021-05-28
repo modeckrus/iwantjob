@@ -3,6 +3,7 @@ import 'package:client/service/messager/message.dart';
 import 'package:client/service/messager/messager.dart';
 import 'package:client/service/messager/streamed_message.dart';
 import 'package:get_it/get_it.dart';
+import 'package:grpc/grpc_connection_interface.dart';
 import 'package:grpc/service_api.dart';
 import '../auth.dart';
 import '../error_service.dart';
@@ -10,6 +11,7 @@ import '../grpc_service.dart';
 import 'message.dart' as u;
 import 'streamed_message.dart' as u;
 import 'package:fixnum/fixnum.dart' as $fixnum;
+
 class GrpcMessager extends Messager {
   @override
   Future<u.Message?> CreateMessage({String? text, String? photo}) async {
@@ -17,11 +19,16 @@ class GrpcMessager extends Messager {
       final client = GRPCService().client;
       final options = Map<String, String>();
       options['authorization'] = GetIt.I.get<Auth>().user.token;
-      final resp = await MessagerClient(client, options: CallOptions(metadata: options))
-          .createMessage(createMessageReq(text: text, photo: photo));
+      final resp =
+          await MessagerClient(client, options: CallOptions(metadata: options))
+              .createMessage(createMessageReq(text: text, photo: photo));
       return u.Message.fromGRPC(resp);
     } catch (e) {
-      ErrorService().AddString(e.toString());
+      if (e is GrpcError) {
+        ErrorService().handleGrpcError(e);
+      } else {
+        ErrorService().AddString(e.toString());
+      }
     }
   }
 
@@ -31,11 +38,16 @@ class GrpcMessager extends Messager {
       final client = GRPCService().client;
       final options = Map<String, String>();
       options['authorization'] = GetIt.I.get<Auth>().user.token;
-      final resp = await MessagerClient(client, options: CallOptions(metadata: options))
-          .deleteMessage(deleteMessageReq(id: id));
+      final resp =
+          await MessagerClient(client, options: CallOptions(metadata: options))
+              .deleteMessage(deleteMessageReq(id: id));
       return resp.id;
     } catch (e) {
-      ErrorService().AddString(e.toString());
+      if (e is GrpcError) {
+        ErrorService().handleGrpcError(e);
+      } else {
+        ErrorService().AddString(e.toString());
+      }
     }
   }
 
@@ -46,13 +58,18 @@ class GrpcMessager extends Messager {
       final client = GRPCService().client;
       final options = Map<String, String>();
       options['authorization'] = GetIt.I.get<Auth>().user.token;
-      final f= $fixnum.Int64((from.millisecondsSinceEpoch ~/ 1000));
-      final resp = await MessagerClient(client, options: CallOptions(metadata: options))
-          .getMessages(getMessagesReq(from: f, first: first));
+      final f = $fixnum.Int64((from.millisecondsSinceEpoch ~/ 1000));
+      final resp =
+          await MessagerClient(client, options: CallOptions(metadata: options))
+              .getMessages(getMessagesReq(from: f, first: first));
       final messages = resp.messages.map((e) => u.Message.fromGRPC(e)).toList();
       return messages;
     } catch (e) {
-      ErrorService().AddString(e.toString());
+      if (e is GrpcError) {
+        ErrorService().handleGrpcError(e);
+      } else {
+        ErrorService().AddString(e.toString());
+      }
     }
   }
 
@@ -62,27 +79,37 @@ class GrpcMessager extends Messager {
       final client = GRPCService().client;
       final options = Map<String, String>();
       options['authorization'] = GetIt.I.get<Auth>().user.token;
-      final f= $fixnum.Int64((from.millisecondsSinceEpoch ~/ 1000));
-      final resp = MessagerClient(client, options: CallOptions(metadata: options))
-          .streamMessages(streamMessagesReq(from: f));
+      final f = $fixnum.Int64((from.millisecondsSinceEpoch ~/ 1000));
+      final resp =
+          MessagerClient(client, options: CallOptions(metadata: options))
+              .streamMessages(streamMessagesReq(from: f));
       return resp.map((event) => StreamedMessage.fromGRPC(event));
     } catch (e) {
-      ErrorService().AddString(e.toString());
+      if (e is GrpcError) {
+        ErrorService().handleGrpcError(e);
+      } else {
+        ErrorService().AddString(e.toString());
+      }
     }
   }
 
   @override
   Future<u.Message?> UpdateMessage(
       {required String id, String? text, String? photo}) async {
-     try {
+    try {
       final client = GRPCService().client;
       final options = Map<String, String>();
       options['authorization'] = GetIt.I.get<Auth>().user.token;
-      final resp = await MessagerClient(client, options: CallOptions(metadata: options))
+      final resp = await MessagerClient(client,
+              options: CallOptions(metadata: options))
           .updateMessage(updateMessageReq(id: id, text: text, photo: photo));
       return u.Message.fromGRPC(resp);
     } catch (e) {
-      ErrorService().AddString(e.toString());
+      if (e is GrpcError) {
+        ErrorService().handleGrpcError(e);
+      } else {
+        ErrorService().AddString(e.toString());
+      }
     }
   }
 }
