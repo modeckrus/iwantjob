@@ -28,6 +28,7 @@ message StreamedMessahge{
     string photo =4;
     string opType = 5;
     int64 createdAt = 6;
+    MUser user = 7;
 }
 message Messages{
     repeated Message messages = 1;
@@ -39,6 +40,12 @@ message Message{
     string text = 3;
     string photo =4;
     int64 createdAt = 5;
+    MUser user = 6;
+}
+
+message MUser{
+    string Name = 1;
+    string Role = 2;
 }
 
 message getMessagesReq{

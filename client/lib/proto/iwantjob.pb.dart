@@ -65,6 +65,7 @@ class StreamedMessahge extends $pb.GeneratedMessage {
     ..aOS(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'photo')
     ..aOS(5, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'opType', protoName: 'opType')
     ..aInt64(6, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'createdAt', protoName: 'createdAt')
+    ..aOM<MUser>(7, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'user', subBuilder: MUser.create)
     ..hasRequiredFields = false
   ;
 
@@ -76,6 +77,7 @@ class StreamedMessahge extends $pb.GeneratedMessage {
     $core.String? photo,
     $core.String? opType,
     $fixnum.Int64? createdAt,
+    MUser? user,
   }) {
     final _result = create();
     if (fid != null) {
@@ -95,6 +97,9 @@ class StreamedMessahge extends $pb.GeneratedMessage {
     }
     if (createdAt != null) {
       _result.createdAt = createdAt;
+    }
+    if (user != null) {
+      _result.user = user;
     }
     return _result;
   }
@@ -172,6 +177,17 @@ class StreamedMessahge extends $pb.GeneratedMessage {
   $core.bool hasCreatedAt() => $_has(5);
   @$pb.TagNumber(6)
   void clearCreatedAt() => clearField(6);
+
+  @$pb.TagNumber(7)
+  MUser get user => $_getN(6);
+  @$pb.TagNumber(7)
+  set user(MUser v) { setField(7, v); }
+  @$pb.TagNumber(7)
+  $core.bool hasUser() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearUser() => clearField(7);
+  @$pb.TagNumber(7)
+  MUser ensureUser() => $_ensure(6);
 }
 
 class Messages extends $pb.GeneratedMessage {
@@ -222,6 +238,7 @@ class Message extends $pb.GeneratedMessage {
     ..aOS(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'text')
     ..aOS(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'photo')
     ..aInt64(5, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'createdAt', protoName: 'createdAt')
+    ..aOM<MUser>(6, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'user', subBuilder: MUser.create)
     ..hasRequiredFields = false
   ;
 
@@ -232,6 +249,7 @@ class Message extends $pb.GeneratedMessage {
     $core.String? text,
     $core.String? photo,
     $fixnum.Int64? createdAt,
+    MUser? user,
   }) {
     final _result = create();
     if (fid != null) {
@@ -248,6 +266,9 @@ class Message extends $pb.GeneratedMessage {
     }
     if (createdAt != null) {
       _result.createdAt = createdAt;
+    }
+    if (user != null) {
+      _result.user = user;
     }
     return _result;
   }
@@ -316,6 +337,78 @@ class Message extends $pb.GeneratedMessage {
   $core.bool hasCreatedAt() => $_has(4);
   @$pb.TagNumber(5)
   void clearCreatedAt() => clearField(5);
+
+  @$pb.TagNumber(6)
+  MUser get user => $_getN(5);
+  @$pb.TagNumber(6)
+  set user(MUser v) { setField(6, v); }
+  @$pb.TagNumber(6)
+  $core.bool hasUser() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearUser() => clearField(6);
+  @$pb.TagNumber(6)
+  MUser ensureUser() => $_ensure(5);
+}
+
+class MUser extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'MUser', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'model'), createEmptyInstance: create)
+    ..aOS(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'Name', protoName: 'Name')
+    ..aOS(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'Role', protoName: 'Role')
+    ..hasRequiredFields = false
+  ;
+
+  MUser._() : super();
+  factory MUser({
+    $core.String? name,
+    $core.String? role,
+  }) {
+    final _result = create();
+    if (name != null) {
+      _result.name = name;
+    }
+    if (role != null) {
+      _result.role = role;
+    }
+    return _result;
+  }
+  factory MUser.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory MUser.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  MUser clone() => MUser()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  MUser copyWith(void Function(MUser) updates) => super.copyWith((message) => updates(message as MUser)) as MUser; // ignore: deprecated_member_use
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static MUser create() => MUser._();
+  MUser createEmptyInstance() => create();
+  static $pb.PbList<MUser> createRepeated() => $pb.PbList<MUser>();
+  @$core.pragma('dart2js:noInline')
+  static MUser getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<MUser>(create);
+  static MUser? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get name => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set name($core.String v) { $_setString(0, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasName() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearName() => clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get role => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set role($core.String v) { $_setString(1, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasRole() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearRole() => clearField(2);
 }
 
 class getMessagesReq extends $pb.GeneratedMessage {

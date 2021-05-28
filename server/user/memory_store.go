@@ -2,6 +2,7 @@ package user
 
 import (
 	"fmt"
+	"iwantjob/server/m"
 	"strconv"
 	"sync"
 
@@ -10,16 +11,16 @@ import (
 
 type MemoryUserStore struct {
 	mutex sync.Mutex
-	users map[string]*User
+	users map[string]*m.User
 }
 
 func NewInMemoryUserStore() *MemoryUserStore {
 	return &MemoryUserStore{
-		users: make(map[string]*User),
+		users: make(map[string]*m.User),
 	}
 }
 
-func (store *MemoryUserStore) Save(user *User) error {
+func (store *MemoryUserStore) Save(user *m.User) error {
 	store.mutex.Lock()
 	defer store.mutex.Unlock()
 
@@ -30,7 +31,7 @@ func (store *MemoryUserStore) Save(user *User) error {
 	store.users[user.Name] = user.Clone(strconv.Itoa(len(store.users)))
 	return nil
 }
-func (store *MemoryUserStore) Find(username string) (*User, error) {
+func (store *MemoryUserStore) Find(username string) (*m.User, error) {
 	store.mutex.Lock()
 	defer store.mutex.Unlock()
 
@@ -42,7 +43,7 @@ func (store *MemoryUserStore) Find(username string) (*User, error) {
 	return user.Clone(user.ID), nil
 }
 
-func (store *MemoryUserStore) SingUp(username string, password string) (*User, error) {
+func (store *MemoryUserStore) SingUp(username string, password string) (*m.User, error) {
 	store.mutex.Lock()
 	defer store.mutex.Unlock()
 
@@ -54,7 +55,7 @@ func (store *MemoryUserStore) SingUp(username string, password string) (*User, e
 	if err != nil {
 		return nil, err
 	}
-	store.users[username] = &User{
+	store.users[username] = &m.User{
 		ID:             strconv.Itoa(len(store.users)),
 		Name:           username,
 		HashedPassword: string(hpass),
@@ -64,7 +65,7 @@ func (store *MemoryUserStore) SingUp(username string, password string) (*User, e
 	return user.Clone(user.ID), nil
 }
 
-func (store *MemoryUserStore) FindById(id string) (*User, error) {
+func (store *MemoryUserStore) FindById(id string) (*m.User, error) {
 	store.mutex.Lock()
 	defer store.mutex.Unlock()
 

@@ -2,7 +2,7 @@ package mjwt
 
 import (
 	"fmt"
-	"iwantjob/server/user"
+	"iwantjob/server/m"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
@@ -18,7 +18,7 @@ func NewJWTManager(secretKey string, tokenDuration time.Duration, refreshDuratio
 	return &JWTManager{secretKey, tokenDuration, refreshDuration}
 }
 
-func (manager *JWTManager) Generate(user *user.User) ([]string, error) {
+func (manager *JWTManager) Generate(user *m.User) ([]string, error) {
 	claims := UserClaims{
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(manager.tokenDuration).Unix(),

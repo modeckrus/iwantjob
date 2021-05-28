@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"iwantjob/server/cube"
 	"iwantjob/server/grpcs-auth"
+	"iwantjob/server/m"
 	"iwantjob/server/messager"
 	"iwantjob/server/mjwt"
 	"iwantjob/server/model"
@@ -42,7 +43,7 @@ const (
 )
 
 func createUser(userStore user.UserStore, username, password, role string) error {
-	user, err := user.NewUser(username, password, role)
+	user, err := m.NewUser(username, password, role)
 	if err != nil {
 		return err
 	}
@@ -103,7 +104,7 @@ func AddAdmin(client *mongo.Client) error {
 			if err != nil {
 				return err
 			}
-			_, err = coll.InsertOne(ctx, user.User{
+			_, err = coll.InsertOne(ctx, m.User{
 				Name:           "admin",
 				HashedPassword: string(hashPass),
 				Role:           "admin",
@@ -118,7 +119,7 @@ func AddAdmin(client *mongo.Client) error {
 			return res.Err()
 		}
 	}
-	admin := user.User{}
+	admin := m.User{}
 	res.Decode(&admin)
 	log.Println("Already Have admin", admin)
 	return nil

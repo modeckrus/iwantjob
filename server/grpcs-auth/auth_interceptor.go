@@ -29,15 +29,15 @@ func (interceptor *AuthInterceptor) Unary() grpc.UnaryServerInterceptor {
 	) (interface{}, error) {
 		log.Println("--> unary interceptor: ", info.FullMethod)
 
-		// claims, err := interceptor.Authorize(ctx, info.FullMethod)
-		// if err != nil {
-		// 	return nil, err
-		// }
-		claims := &mjwt.UserClaims{
-			ID:       "60abd2caa2c042862a093c65",
-			Username: "admin",
-			Role:     "admin",
+		claims, err := interceptor.Authorize(ctx, info.FullMethod)
+		if err != nil {
+			return nil, err
 		}
+		// claims := &mjwt.UserClaims{
+		// 	ID:       "60abd2caa2c042862a093c65",
+		// 	Username: "admin",
+		// 	Role:     "admin",
+		// }
 		if claims != nil {
 			ctx = context.WithValue(ctx, "claims", claims)
 		}
@@ -54,10 +54,10 @@ func (interceptor *AuthInterceptor) Stream() grpc.StreamServerInterceptor {
 	) error {
 		log.Println("--> stream interceptor: ", info.FullMethod)
 
-		// _, err := interceptor.Authorize(stream.Context(), info.FullMethod)
-		// if err != nil {
-		// 	return err
-		// }
+		_, err := interceptor.Authorize(stream.Context(), info.FullMethod)
+		if err != nil {
+			return err
+		}
 
 		return handler(srv, stream)
 	}
@@ -76,6 +76,7 @@ func (interceptor *AuthInterceptor) Authorize(ctx context.Context, method string
 	}
 
 	values := md["authorization"]
+	log.Println(md)
 	if len(values) == 0 {
 		return nil, status.Errorf(codes.Unauthenticated, "authorization token is not provided")
 	}

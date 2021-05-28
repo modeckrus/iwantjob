@@ -2,11 +2,14 @@ package messager
 
 import (
 	"context"
+	"fmt"
+	"iwantjob/server/m"
 	"iwantjob/server/mjwt"
 	"iwantjob/server/model"
 	"log"
 	"time"
 
+	"github.com/modeckrus/utils"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -35,19 +38,42 @@ func (s *MessagerMongo) GetMessages(ctx context.Context, req *model.GetMessagesR
 	coll := s.Client.Database("messages").Collection("messages")
 	filter := bson.M{"createdAt": bson.M{"$grt": req.From}}
 	log.Println(filter)
-	res, err := coll.Find(ctx, bson.M{})
+	//{$match: {createdat: {$gt: 1}}}
+	res, err := coll.Aggregate(ctx, mongo.Pipeline{
+		bson.D{
+			{
+				"$match", bson.M{
+					"createdat": bson.M{"$gt": req.From},
+				},
+			}},
+		bson.D{
+			{"$lookup", bson.M{
+				"from":         "users",
+				"localField":   "fid",
+				"foreignField": "_id",
+				"as":           "user",
+			}}},
+		bson.D{
+			bson.E{"$limit", req.First},
+		},
+	},
+		&options.AggregateOptions{},
+	)
+
+	// res, err := coll.Find(ctx, bson.M{})
 	if err != nil {
 		return nil, err
 	}
 	messages := make([]*model.Message, 0)
 	for res.Next(ctx) {
-		message := &MongoMessage{}
+		message := &m.MongoMessage{}
 		err := res.Decode(message)
 		if err != nil {
 			log.Println("Error while decoding: ", err)
 			continue
 		}
-		messages = append(messages, message.toGRPCMessage())
+		fmt.Printf("%#v\n", message)
+		messages = append(messages, message.ToGRPCMessage())
 	}
 	return &model.Messages{
 		Messages: messages,
@@ -60,11 +86,22 @@ func (s *MessagerMongo) CreateMessage(ctx context.Context, req *model.CreateMess
 		return nil, err
 	}
 	fid := clms.ID
-	message := &MongoMessage{
-		Fid:       fid,
+	fiod, err := primitive.ObjectIDFromHex(fid)
+	if err != nil {
+		return nil, err
+	}
+
+	message := &m.MongoMessage{
+		Fid:       fiod,
 		Text:      req.Text,
 		Photo:     req.Photo,
 		CreatedAt: time.Now().Unix(),
+		// User: []m.MessageUser{
+		// 	{
+		// 		Id: fiod,
+		// 		Name: ,
+		// 	},
+		// },
 	}
 	res, err := coll.InsertOne(ctx, message)
 	if err != nil {
@@ -75,7 +112,7 @@ func (s *MessagerMongo) CreateMessage(ctx context.Context, req *model.CreateMess
 		return nil, status.Errorf(codes.Internal, "error while parse object id")
 	}
 	message.Id = oid
-	return message.toGRPCMessage(), nil
+	return message.ToGRPCMessage(), nil
 }
 func (s *MessagerMongo) UpdateMessage(ctx context.Context, req *model.UpdateMessageReq) (*model.Message, error) {
 	coll := s.Client.Database("messages").Collection("messages")
@@ -92,7 +129,7 @@ func (s *MessagerMongo) UpdateMessage(ctx context.Context, req *model.UpdateMess
 	if messageResult.Err() != nil {
 		return nil, messageResult.Err()
 	}
-	var message MongoMessage
+	var message m.MongoMessage
 	messageResult.Decode(&message)
 	if clms.ID != fid {
 		return nil, status.Errorf(codes.Unauthenticated, "User id and Message id not same")
@@ -107,7 +144,7 @@ func (s *MessagerMongo) UpdateMessage(ctx context.Context, req *model.UpdateMess
 	if err != nil {
 		return nil, err
 	}
-	return message.toGRPCMessage(), nil
+	return message.ToGRPCMessage(), nil
 }
 func (s *MessagerMongo) DeleteMessage(ctx context.Context, req *model.DeleteMessageReq) (*model.DeletedMessage, error) {
 	coll := s.Client.Database("messages").Collection("messages")
@@ -123,12 +160,12 @@ func (s *MessagerMongo) DeleteMessage(ctx context.Context, req *model.DeleteMess
 	if messageReq.Err() != nil {
 		return nil, err
 	}
-	message := &MongoMessage{}
+	message := &m.MongoMessage{}
 	err = messageReq.Decode(message)
 	if err != nil {
 		return nil, err
 	}
-	if clms.ID != message.Fid && clms.Role != "admin" {
+	if clms.ID != message.Fid.Hex() && clms.Role != "admin" {
 		return nil, status.Errorf(codes.Unauthenticated, "User id and Message id not same")
 	}
 	del, err := coll.DeleteOne(ctx, bson.M{"_id": oid})
@@ -145,9 +182,18 @@ func (s *MessagerMongo) StreamMessages(req *model.StreamMessagesReq, stream mode
 	ctx := stream.Context()
 	// matchStage := bson.D{{"$match", bson.D{{"operationType", "insert"}}}}
 	opts := options.ChangeStream().SetFullDocument("updateLookup")
-
-	changeStream, err := coll.Watch(ctx, mongo.Pipeline{}, opts)
+	// pipeline := mongo.Pipeline{
+	// 	bson.D{{"$lookup", bson.M{
+	// 		"from":         "users",
+	// 		"localField":   "fid",
+	// 		"foreignField": "_id",
+	// 		"as":           "user",
+	// 	}}},
+	// }
+	pipeline := mongo.Pipeline{}
+	changeStream, err := coll.Watch(ctx, pipeline, opts)
 	if err != nil {
+		log.Println(err)
 		return err
 	}
 	for changeStream.Next(ctx) {
@@ -173,15 +219,41 @@ func (s *MessagerMongo) StreamMessages(req *model.StreamMessagesReq, stream mode
 				})
 			}
 		} else {
+			log.Println("Not delete: ", opType)
 			fullDocument := changeStream.Current.Lookup("fullDocument")
-			message := MongoMessage{}
+			message := m.MongoMessage{}
 			err := fullDocument.Unmarshal(&message)
 			if err != nil {
+				log.Println(err)
 				continue
 			}
+			log.Println(message)
 			if ok {
-				result := message.toGRPCStream(opType)
-				log.Println(result)
+				result := message.ToGRPCStream(opType)
+				userId, err := primitive.ObjectIDFromHex(result.Fid)
+				if err != nil {
+					log.Println(err)
+					continue
+				}
+				res := s.Client.Database("messages").Collection("users").FindOne(ctx, bson.M{"_id": userId})
+				if res.Err() != nil {
+					log.Println(res.Err())
+					continue
+				}
+				log.Println("MongoUser")
+				messagerUser := m.MessageUser{}
+
+				err = res.Decode(&messagerUser)
+				if err != nil {
+					utils.SPrint(res)
+					log.Println(err)
+					continue
+				}
+				result.User = &model.MUser{
+					Name: messagerUser.Name,
+					Role: messagerUser.Role,
+				}
+				// log.Println(result)
 				stream.Send(result)
 			} else {
 				log.Println("Optype not ok")

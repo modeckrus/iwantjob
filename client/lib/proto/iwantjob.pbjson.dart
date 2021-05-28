@@ -28,11 +28,12 @@ const StreamedMessahge$json = const {
     const {'1': 'photo', '3': 4, '4': 1, '5': 9, '10': 'photo'},
     const {'1': 'opType', '3': 5, '4': 1, '5': 9, '10': 'opType'},
     const {'1': 'createdAt', '3': 6, '4': 1, '5': 3, '10': 'createdAt'},
+    const {'1': 'user', '3': 7, '4': 1, '5': 11, '6': '.model.MUser', '10': 'user'},
   ],
 };
 
 /// Descriptor for `StreamedMessahge`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List streamedMessahgeDescriptor = $convert.base64Decode('ChBTdHJlYW1lZE1lc3NhaGdlEhAKA2ZpZBgBIAEoCVIDZmlkEg4KAmlkGAIgASgJUgJpZBISCgR0ZXh0GAMgASgJUgR0ZXh0EhQKBXBob3RvGAQgASgJUgVwaG90bxIWCgZvcFR5cGUYBSABKAlSBm9wVHlwZRIcCgljcmVhdGVkQXQYBiABKANSCWNyZWF0ZWRBdA==');
+final $typed_data.Uint8List streamedMessahgeDescriptor = $convert.base64Decode('ChBTdHJlYW1lZE1lc3NhaGdlEhAKA2ZpZBgBIAEoCVIDZmlkEg4KAmlkGAIgASgJUgJpZBISCgR0ZXh0GAMgASgJUgR0ZXh0EhQKBXBob3RvGAQgASgJUgVwaG90bxIWCgZvcFR5cGUYBSABKAlSBm9wVHlwZRIcCgljcmVhdGVkQXQYBiABKANSCWNyZWF0ZWRBdBIgCgR1c2VyGAcgASgLMgwubW9kZWwuTVVzZXJSBHVzZXI=');
 @$core.Deprecated('Use messagesDescriptor instead')
 const Messages$json = const {
   '1': 'Messages',
@@ -52,11 +53,23 @@ const Message$json = const {
     const {'1': 'text', '3': 3, '4': 1, '5': 9, '10': 'text'},
     const {'1': 'photo', '3': 4, '4': 1, '5': 9, '10': 'photo'},
     const {'1': 'createdAt', '3': 5, '4': 1, '5': 3, '10': 'createdAt'},
+    const {'1': 'user', '3': 6, '4': 1, '5': 11, '6': '.model.MUser', '10': 'user'},
   ],
 };
 
 /// Descriptor for `Message`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List messageDescriptor = $convert.base64Decode('CgdNZXNzYWdlEhAKA2ZpZBgBIAEoCVIDZmlkEg4KAmlkGAIgASgJUgJpZBISCgR0ZXh0GAMgASgJUgR0ZXh0EhQKBXBob3RvGAQgASgJUgVwaG90bxIcCgljcmVhdGVkQXQYBSABKANSCWNyZWF0ZWRBdA==');
+final $typed_data.Uint8List messageDescriptor = $convert.base64Decode('CgdNZXNzYWdlEhAKA2ZpZBgBIAEoCVIDZmlkEg4KAmlkGAIgASgJUgJpZBISCgR0ZXh0GAMgASgJUgR0ZXh0EhQKBXBob3RvGAQgASgJUgVwaG90bxIcCgljcmVhdGVkQXQYBSABKANSCWNyZWF0ZWRBdBIgCgR1c2VyGAYgASgLMgwubW9kZWwuTVVzZXJSBHVzZXI=');
+@$core.Deprecated('Use mUserDescriptor instead')
+const MUser$json = const {
+  '1': 'MUser',
+  '2': const [
+    const {'1': 'Name', '3': 1, '4': 1, '5': 9, '10': 'Name'},
+    const {'1': 'Role', '3': 2, '4': 1, '5': 9, '10': 'Role'},
+  ],
+};
+
+/// Descriptor for `MUser`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List mUserDescriptor = $convert.base64Decode('CgVNVXNlchISCgROYW1lGAEgASgJUgROYW1lEhIKBFJvbGUYAiABKAlSBFJvbGU=');
 @$core.Deprecated('Use getMessagesReqDescriptor instead')
 const getMessagesReq$json = const {
   '1': 'getMessagesReq',

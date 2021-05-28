@@ -1,5 +1,6 @@
 import 'package:client/service/auth.dart';
 import 'package:client/service/error/cubit/error_cubit.dart';
+import 'package:client/service/messager/messager_page.dart';
 import 'package:client/widgets/cube_view.dart';
 import 'package:client/widgets/cubes/cubes_bloc.dart';
 import 'package:flutter/material.dart';
@@ -80,7 +81,7 @@ class _HomePageState extends State<HomePage> {
                   SnackBar(content: Text(state.error.toString())));
             }
           },
-          child: CubeView(),
+          child: MessagerPage(),
         ),
       ),
     );

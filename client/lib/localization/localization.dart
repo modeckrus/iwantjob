@@ -24,6 +24,9 @@ class AppLocalizations {
   String get console{
     return Intl.message('Console', name:'console');
   }
+  String get delete{
+    return Intl.message('Delete', name:'delete');
+  }
   String get reload{
     return Intl.message('Reload', name:'Reload');
   }
