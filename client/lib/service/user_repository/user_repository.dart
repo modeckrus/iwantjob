@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:client/service/messager/message.dart';
+import 'package:client/service/messager/messager_user.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive/hive.dart';
 import 'package:uuid/uuid.dart';
@@ -13,6 +15,8 @@ export './models/models.dart';
 class UserRepository {
   Future<void> init() async {
     Hive.registerAdapter<User>(UserAdapter());
+    Hive.registerAdapter<Message>(MessageAdapter());
+    Hive.registerAdapter<MessagerUser>(MessagerUserAdapter());
     try {
       box = await Hive.openBox<User>('user');
       GetIt.I.registerSingleton<Box<User>>(box, instanceName: 'userBox');

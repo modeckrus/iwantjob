@@ -145,9 +145,7 @@ func main() {
 	dbMongo := &cube.MongoServer{
 		Client: client,
 	}
-	messagerMongo := &messager.MessagerMongo{
-		Client: client,
-	}
+	messagerMongo := messager.NewMessagerMongo(client)
 	model.RegisterDbServer(s, dbMongo)
 	model.RegisterAuthServiceServer(s, authServer)
 	model.RegisterMessagerServer(s, messagerMongo)

@@ -2,6 +2,8 @@ import 'package:client/proto/iwantjob.pb.dart' as pb;
 import 'package:client/service/messager/messager_user.dart';
 import 'package:hive/hive.dart';
 
+part 'message.g.dart';
+
 @HiveType(typeId: 3)
 class Message {
   @HiveField(0)

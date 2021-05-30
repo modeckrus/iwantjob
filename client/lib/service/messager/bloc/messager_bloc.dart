@@ -1,9 +1,11 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:client/proto/iwantjob.pb.dart';
 import 'package:client/service/messager/message.dart' as u;
 import 'package:client/service/messager/messager.dart';
 import 'package:get_it/get_it.dart';
+import 'package:hive/hive.dart';
 import 'package:meta/meta.dart';
 import 'package:protobuf/protobuf.dart';
 
@@ -42,15 +44,21 @@ class MessagerBloc extends Bloc<MessagerEvent, MessagerState> {
         addMessages();
       }
     });
+    Hive.openBox<u.Message>('messager').then((value){
+      box = value;
+    });
   }
   List<u.Message> messages = [];
-  void addMessages() {
+  void addMessages() async {
     messages.sort((m1, m2) {
       return m1.createdAt.compareTo(m2.createdAt);
     });
+    
     add(MessagerList(messages));
+    await box?.clear();
+    await box?.addAll(messages);
   }
-
+  Box<u.Message>? box;
   @override
   Stream<MessagerState> mapEventToState(
     MessagerEvent event,

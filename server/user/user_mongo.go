@@ -75,15 +75,15 @@ func (store *MongoUser) SingUp(username string, password string) (*m.User, error
 				return nil, err
 			}
 			id := res.InsertedID.(primitive.ObjectID)
-			messagerUser := &m.MessageUser{
-				Name: u.Name,
-				Role: u.Role,
-				Id:   id,
-			}
-			_, err = store.Client.Database("messages").Collection("users").InsertOne(ctx, messagerUser)
-			if err != nil {
-				return nil, err
-			}
+			// messagerUser := &m.MessageUser{
+			// 	Name: u.Name,
+			// 	Role: u.Role,
+			// 	Id:   id,
+			// }
+			// _, err = store.Client.Database("messages").Collection("users").InsertOne(ctx, messagerUser)
+			// if err != nil {
+			// 	return nil, err
+			// }
 			return u.Clone(id.Hex()), nil
 		}
 	}

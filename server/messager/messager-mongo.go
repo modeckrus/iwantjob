@@ -2,7 +2,6 @@ package messager
 
 import (
 	"context"
-	"fmt"
 	"iwantjob/server/m"
 	"iwantjob/server/mjwt"
 	"iwantjob/server/model"
@@ -22,6 +21,100 @@ type MessagerMongo struct {
 	Client *mongo.Client
 }
 
+func NewMessagerMongo(client *mongo.Client) *MessagerMongo {
+	m := &MessagerMongo{
+		Client: client,
+	}
+	go func() {
+		m.watchUser()
+	}()
+	return m
+}
+
+func (s *MessagerMongo) watchUser() {
+	coll := s.Client.Database("users").Collection("users")
+	moll := s.Client.Database("messages").Collection("users")
+	ctx := context.Background()
+	// matchStage := bson.D{{"$match", bson.D{{"operationType", "insert"}}}}
+	opts := options.ChangeStream().SetFullDocument("updateLookup")
+	// pipeline := mongo.Pipeline{
+	// 	bson.D{{"$lookup", bson.M{
+	// 		"from":         "users",
+	// 		"localField":   "fid",
+	// 		"foreignField": "_id",
+	// 		"as":           "user",
+	// 	}}},
+	// }
+	pipeline := mongo.Pipeline{}
+	changeStream, err := coll.Watch(ctx, pipeline, opts)
+	if err != nil {
+		log.Println(err)
+	}
+	for changeStream.Next(ctx) {
+		opTypeRaw := changeStream.Current.Lookup("operationType")
+		opType, ok := opTypeRaw.StringValueOK()
+		if !ok {
+			log.Println("OpType not provided")
+			continue
+		}
+		log.Println(opType)
+		if opType == "delete" {
+			oid := changeStream.Current.Lookup("documentKey")
+			type WithId struct {
+				Id primitive.ObjectID `bson:"_id,omitempty"`
+			}
+			withId := WithId{}
+			err := oid.Unmarshal(&withId)
+			if err != nil {
+				log.Println(err)
+				continue
+			}
+			moll.DeleteOne(ctx, bson.M{"_id": withId.Id})
+
+		} else if opType == "insert" {
+
+			fullDocument := changeStream.Current.Lookup("fullDocument")
+			muser := m.User{}
+			err := fullDocument.Unmarshal(&muser)
+			if err != nil {
+				log.Println(err)
+				continue
+			}
+			oid, err := primitive.ObjectIDFromHex(muser.ID)
+			if err != nil {
+				continue
+			}
+			moll.InsertOne(ctx, m.MessageUser{
+				Id:   oid,
+				Name: muser.Name,
+				Role: muser.Role,
+			})
+		} else if opType == "update" {
+			fullDocument := changeStream.Current.Lookup("fullDocument")
+			muser := m.User{}
+			err := fullDocument.Unmarshal(&muser)
+			if err != nil {
+				log.Println(err)
+				continue
+			}
+			oid, err := primitive.ObjectIDFromHex(muser.ID)
+			if err != nil {
+				continue
+			}
+			_, err = moll.DeleteOne(ctx, bson.M{"_id": oid})
+			if err != nil {
+				continue
+			}
+			moll.InsertOne(ctx, m.MessageUser{
+				Id:   oid,
+				Name: muser.Name,
+				Role: muser.Role,
+			})
+		}
+	}
+
+}
+
 func ctxToClaims(ctx context.Context) (*mjwt.UserClaims, error) {
 	claims := ctx.Value("claims")
 	if claims == nil {
@@ -36,8 +129,6 @@ func ctxToClaims(ctx context.Context) (*mjwt.UserClaims, error) {
 
 func (s *MessagerMongo) GetMessages(ctx context.Context, req *model.GetMessagesReq) (*model.Messages, error) {
 	coll := s.Client.Database("messages").Collection("messages")
-	filter := bson.M{"createdAt": bson.M{"$grt": req.From}}
-	log.Println(filter)
 	//{$match: {createdat: {$gt: 1}}}
 	res, err := coll.Aggregate(ctx, mongo.Pipeline{
 		bson.D{
@@ -72,7 +163,6 @@ func (s *MessagerMongo) GetMessages(ctx context.Context, req *model.GetMessagesR
 			log.Println("Error while decoding: ", err)
 			continue
 		}
-		fmt.Printf("%#v\n", message)
 		messages = append(messages, message.ToGRPCMessage())
 	}
 	return &model.Messages{
@@ -180,16 +270,7 @@ func (s *MessagerMongo) DeleteMessage(ctx context.Context, req *model.DeleteMess
 func (s *MessagerMongo) StreamMessages(req *model.StreamMessagesReq, stream model.Messager_StreamMessagesServer) error {
 	coll := s.Client.Database("messages").Collection("messages")
 	ctx := stream.Context()
-	// matchStage := bson.D{{"$match", bson.D{{"operationType", "insert"}}}}
 	opts := options.ChangeStream().SetFullDocument("updateLookup")
-	// pipeline := mongo.Pipeline{
-	// 	bson.D{{"$lookup", bson.M{
-	// 		"from":         "users",
-	// 		"localField":   "fid",
-	// 		"foreignField": "_id",
-	// 		"as":           "user",
-	// 	}}},
-	// }
 	pipeline := mongo.Pipeline{}
 	changeStream, err := coll.Watch(ctx, pipeline, opts)
 	if err != nil {
@@ -200,8 +281,6 @@ func (s *MessagerMongo) StreamMessages(req *model.StreamMessagesReq, stream mode
 		opTypeRaw := changeStream.Current.Lookup("operationType")
 		opType, ok := opTypeRaw.StringValueOK()
 		if opType == "delete" {
-			log.Println("DeleteOperation")
-			log.Println(changeStream.Current)
 			oid := changeStream.Current.Lookup("documentKey")
 			type WithId struct {
 				Id primitive.ObjectID `bson:"_id,omitempty"`
@@ -219,7 +298,6 @@ func (s *MessagerMongo) StreamMessages(req *model.StreamMessagesReq, stream mode
 				})
 			}
 		} else {
-			log.Println("Not delete: ", opType)
 			fullDocument := changeStream.Current.Lookup("fullDocument")
 			message := m.MongoMessage{}
 			err := fullDocument.Unmarshal(&message)
@@ -227,7 +305,6 @@ func (s *MessagerMongo) StreamMessages(req *model.StreamMessagesReq, stream mode
 				log.Println(err)
 				continue
 			}
-			log.Println(message)
 			if ok {
 				result := message.ToGRPCStream(opType)
 				userId, err := primitive.ObjectIDFromHex(result.Fid)
@@ -240,7 +317,6 @@ func (s *MessagerMongo) StreamMessages(req *model.StreamMessagesReq, stream mode
 					log.Println(res.Err())
 					continue
 				}
-				log.Println("MongoUser")
 				messagerUser := m.MessageUser{}
 
 				err = res.Decode(&messagerUser)

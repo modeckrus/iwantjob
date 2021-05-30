@@ -17,6 +17,7 @@ class _MessagerPageState extends State<MessagerPage> {
   Widget build(BuildContext context) {
     return SafeArea(
           child: Scaffold(
+            drawer: Scaffold.of(context).widget.drawer,
             appBar: AppBar(
               title: Text(AppLocalizations.of(context).messages),
               actions: [

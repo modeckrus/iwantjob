@@ -44,36 +44,34 @@ class _HomePageState extends State<HomePage> {
     return BlocProvider(
       create: (context) => CubesBloc(),
       child: Scaffold(
-        appBar: AppBar(
-          title: Text(AppLocalizations.of(context).home),
-          actions: [
-            IconButton(
-                onPressed: () async {
-                  final cube = await DialogService.addCube(context);
-                  print(cube);
-                },
-                icon: Icon(Icons.add)),
-            IconButton(
-                onPressed: () {
+        drawer: Drawer(
+          child: ListView(
+            children: [
+            ListTile(
+                onTap: () {
                   BlocProvider.of<AuthenticationBloc>(context)
                       .add(AuthenticationLogoutRequested());
                 },
-                icon: Icon(Icons.logout)),
-            IconButton(
-                onPressed: () {
+                title: Text(AppLocalizations.of(context).logOut),
+                leading: Icon(Icons.logout)),
+            ListTile(
+                onTap: () {
                   Navigator.pushNamed(context, '/test');
                 },
-                icon: Icon(Icons.text_snippet)),
+                title: Text(AppLocalizations.of(context).test),
+                leading: Icon(Icons.text_snippet)),
             Builder(builder: (context) {
-              return IconButton(
-                  onPressed: () {
+              return ListTile(
+                  onTap: () {
                     GetIt.I.get<Auth>().refresh();
-                    BlocProvider.of<CubesBloc>(context).add(CubesRefresh());
                   },
-                  icon: Icon(Icons.refresh));
+                  title: Text(AppLocalizations.of(context).render),
+                  leading: Icon(Icons.refresh));
             }),
-          ],
+            ],
+          ),
         ),
+
         body: BlocListener<ErrorCubit, ErrorState>(
           listener: (context, state) {
             if (state is ErrorHasState) {

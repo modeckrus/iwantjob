@@ -27,6 +27,7 @@ func (interceptor *AuthInterceptor) Unary() grpc.UnaryServerInterceptor {
 		info *grpc.UnaryServerInfo,
 		handler grpc.UnaryHandler,
 	) (interface{}, error) {
+		log.SetPrefix(info.FullMethod)
 		log.Println("--> unary interceptor: ", info.FullMethod)
 
 		claims, err := interceptor.Authorize(ctx, info.FullMethod)
@@ -52,6 +53,7 @@ func (interceptor *AuthInterceptor) Stream() grpc.StreamServerInterceptor {
 		info *grpc.StreamServerInfo,
 		handler grpc.StreamHandler,
 	) error {
+		log.SetPrefix(info.FullMethod)
 		log.Println("--> stream interceptor: ", info.FullMethod)
 
 		_, err := interceptor.Authorize(stream.Context(), info.FullMethod)
